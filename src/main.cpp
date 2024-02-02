@@ -34,10 +34,12 @@ void setup()
   Serial.println("good to go");
 }
 
-void loop()
+void loop()       // fill in loop
 {
+  /* from test code
   digitalWrite(testPin, HIGH);
   delay(2000);
   digitalWrite(testPin, LOW);
   delay(2000);
+  */
 }
