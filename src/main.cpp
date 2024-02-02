@@ -7,7 +7,7 @@ ICM42688 IMU(SPI, 10); // initializes an ICM chip object, specifying
                        // protocol + pin select for serial communication
                        // defaults to 8MHz clock, but a third parameter can be
                        // passed to specify up to 24 MHz.
-
+                       // probably refer to motherboard schematic for specific pin
 // const int testPin = PB5;   from test code
 
 void setup()
