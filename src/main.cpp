@@ -8,38 +8,27 @@ ICM42688 IMU(SPI, 10); // initializes an ICM chip object, specifying
                        // defaults to 8MHz clock, but a third parameter can be
                        // passed to specify up to 24 MHz.
                        // probably refer to motherboard schematic for specific pin
-// const int testPin = PB5;   from test code
 
-void setup()
-{
-  // serial to display data
-  Serial.begin(115200);
-  while (!Serial)
-  {
-  }
+void setup() {
+  SerialUSB.begin();
+  while (!SerialUSB) delay(10); // Wait for USB connection to be made to the computer before continuing
+}
 
+void loop() {
   // start communication with IMU
-  Serial.println("initializing...");
+  SerialUSB.println("initializing...");
   int status = IMU.begin();
   if (status < 0)
   {
-    Serial.println("IMU initialization failed");
-    Serial.print("Status: ");
-    Serial.println(status);
+    SerialUSB.println("IMU initialization failed");
+    SerialUSB.print("Status: ");
+    SerialUSB.println(status);
     while (1)
     {
     }
   }
 
-  Serial.println("good to go");
-}
+  SerialUSB.println("good to go");
 
-void loop()       // fill in loop
-{
-  /* from test code
-  digitalWrite(testPin, HIGH);
-  delay(2000);
-  digitalWrite(testPin, LOW);
-  delay(2000);
-  */
+  delay(20);
 }
