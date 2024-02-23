@@ -44,7 +44,7 @@ void setup()
   }
 
   SerialUSB.println("good to go");
-
+  digitalWrite(PB12, LOW);    // Red LED goes off, good to go
   delay(20);
 }
 
