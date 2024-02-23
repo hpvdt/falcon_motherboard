@@ -3,7 +3,9 @@
 /* Using an Arduino library for the ICM42688 maintained by Inhwan Wee.
    https://github.com/finani/ICM42688/
 */
-ICM42688 IMU(SPI, 10); // initializes an ICM chip object, specifying
+
+SPIClass IMUspi(PB15, PB14, PB13);
+ICM42688 IMU(IMUspi, PB10); // initializes an ICM chip object, specifying
                        // protocol + pin select for serial communication
                        // defaults to 8MHz clock, but a third parameter can be
                        // passed to specify up to 24 MHz.
