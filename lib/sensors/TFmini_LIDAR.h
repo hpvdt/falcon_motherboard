@@ -9,4 +9,6 @@
 
 void getTFminidata(int *distance, int *strength);
 
+void TFminisetup();
+
 #endif

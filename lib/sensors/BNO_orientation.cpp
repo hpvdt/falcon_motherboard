@@ -1,32 +1,47 @@
-// Code originally written by George Wang, imported from 
+// Code originally written by George Wang, imported from
 // the Aircraft_Data repository
 
-#include "BNO_orientation.h" 
-
+#include "BNO_orientation.h"
+#include <Adafruit_BNO055.h>
 
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 
 // Check I2C device address and correct line below (by default address is 0x29 or 0x28)
 //                                   id, address
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
-  //could  be in setup function
+// could  be in setup function
 
-//Need info: pitch roll heading
-//heading v yaw??
-float pitch=-1; //pitch degrees
-float roll=-1;  //roll degrees
-float heading=-1;//yaw degrees
+// Need info: pitch roll heading
+// heading v yaw??
+float pitch = -1;   // pitch degrees
+float roll = -1;    // roll degrees
+float heading = -1; // yaw degrees
 
-void orientation_measure(){//unneeded wrapper function
-  sensors_event_t orientationData;
-  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);//get orientation, euler vectors ok up to 45 degrees
-  pitch=orientationData.orientation.pitch;
-  roll=orientationData.orientation.z;
-  heading=orientationData.orientation.x;//some issues with the .heading, .pitch stuff
-
+void orientation_measure()
+{ // unneeded wrapper function
+    sensors_event_t orientationData;
+    bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER); // get orientation, euler vectors ok up to 45 degrees
+    pitch = orientationData.orientation.pitch;
+    roll = orientationData.orientation.z;
+    heading = orientationData.orientation.x; // some issues with the .heading, .pitch stuff
 }
 
+void setup_BNO()
+{
+    
+    if (!bno.begin())
+    {
 
+        // Something went wrong...
+        SerialUSB.println("BNO not worketh");
+        while (1)
+            ;
+    }
+
+    delay(1000);
+
+    bno.setExtCrystalUse(true);
+}
 
 /* This driver uses the Adafruit unified sensor library (Adafruit_Sensor),
    which provides a common 'type' for sensor data and some helper functions.

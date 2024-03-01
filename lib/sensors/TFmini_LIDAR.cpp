@@ -57,17 +57,15 @@ void getTFminiData(int *distance, int *strength)
     wrapper_signal_strength = *strength; // updates global vars
 }
 
-// Example code
-
-void setup()
+void TFminisetup()
 {
   Serial.begin(115200);       //Initialize hardware serial port (serial debug port)
-  while (!Serial);            // wait for serial port to connect. Needed for native USB port only
-  Serial.println ("Initializing...");
+  
   SerialTFMini.begin(TFMINI_BAUDRATE);    //Initialize the data rate for the SoftwareSerial port
   tfmini.begin(&SerialTFMini);            //Initialize the TF Mini sensor  
 }
- 
+/*
+example code for TFmini LIDAR
 void loop()
 {
   int distance = 0;
@@ -84,13 +82,14 @@ void loop()
       Serial.print("signal strength: "); //signal strength (mostly ignore)
       Serial.println(strength);
       
-      //(wrapper testing)
-      /*Serial.println(wrapper_distance);
-      Serial.println(wrapper_signal_strength);*/
+      these two lines were also commented.
+      Serial.println(wrapper_distance);
+      Serial.println(wrapper_signal_strength);
+      
     }
   }
   delay(100);
 }
-
+*/
 //Example code for Benewake TFMini time-of-flight distance sensor. 
 //library by Peter Jansen (December 11/2017)

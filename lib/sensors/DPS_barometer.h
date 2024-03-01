@@ -9,6 +9,7 @@
 
 //void measurements();//altitude measures
 void pressureCheck();
+void DPS_setup();
 
 extern byte pressure;
 extern byte temperature;
