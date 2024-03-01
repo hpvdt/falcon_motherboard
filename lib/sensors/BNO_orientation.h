@@ -10,7 +10,7 @@
 #include <Adafruit_Sensor.h>
 #include <utility/imumaths.h>
 
-void measurements(); // altitude measures
+void BNO_measurements(float pitch, float roll, float heading); // altitude measures
 void setup_BNO(); 
 
 #endif

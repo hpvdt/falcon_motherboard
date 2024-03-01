@@ -9,6 +9,8 @@
 // debug to figure out how to include this, maybe use setup function
 Adafruit_DPS310 dps;
 
+// CS should probably be changed; this was for Arduino Nano
+
 // Can also use SPI!
 #define DPS310_CS 10 // will use I^2C (since its simpler) with arduino nano
 // Note on pin hardware: SCK = I2C SCL = A5 on arduino nano, SDI=SDA=A4, follow tutorial

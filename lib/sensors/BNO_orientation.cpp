@@ -11,14 +11,8 @@ uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 // could  be in setup function
 
-// Need info: pitch roll heading
-// heading v yaw??
-float pitch = -1;   // pitch degrees
-float roll = -1;    // roll degrees
-float heading = -1; // yaw degrees
-
-void orientation_measure()
-{ // unneeded wrapper function
+void BNO_measurements(float pitch, float roll, float heading)
+{ 
     sensors_event_t orientationData;
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER); // get orientation, euler vectors ok up to 45 degrees
     pitch = orientationData.orientation.pitch;
