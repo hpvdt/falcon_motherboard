@@ -1,6 +1,10 @@
 // Code originally written by George Wang, imported from
 // the Aircraft_Data repository
 
+//code and walkthrough from https://how2electronics.com/how-to-use-tfmini-s-lidar-distance-sensor-with-arduino/#Overview
+//sensor documentation available here: https://www.sparkfun.com/products/16977 
+ 
+
 #include "TFmini_LIDAR.h"
 
 TFMini tfmini;
