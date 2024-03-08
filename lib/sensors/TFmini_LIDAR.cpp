@@ -27,8 +27,8 @@ void getTFminiData(int *distance, int *strength)
     char j = 0;
     int checksum = 0;
     static int rx[9];
-    if (SerialTFMini.available())
-    {
+    if (SerialTFMini.available()) // probably look to change this data transmission to support I2C...?
+    {                             // also need to port some stuff to main to keep in scope
         rx[i] = SerialTFMini.read();
         if (rx[0] != 0x59)
         {

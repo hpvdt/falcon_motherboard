@@ -5,6 +5,8 @@
 #include "DPS_barometer.cpp"
 #include "BNO_orientation.cpp"
 
+#define I2C_LIDAR_ADDR 0x03   // datasheet says 0x10 default, but example says 0x03
+
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 TFMini tfmini;
 SoftwareSerial SerialTFMini(3, 4);
@@ -16,18 +18,17 @@ void setup()
     delay(10); // Wait for USB connection to be made to the computer before continuing
 
   TFminisetup(); // TFmini LIDAR setup
-  
-  DPS_setup();  // DPS330 barometer setup
-  
+
+  DPS_setup(); // DPS330 barometer setup
+
   BNO_setup(bno); // BNO055 orientation setup
-  
+
   //////////////////////////////////////////////////////////////////////////
   // Probably fix setup functions, I think we need to keep the sensor objects
   // in the scope of the main function
   //
   // Done for BNO_setup... may need to pass by reference ?
   //////////////////////////////////////////////////////////////////////////
-
 }
 
 void loop()
@@ -35,13 +36,11 @@ void loop()
   // Test code for BNO055 orientation module.
   float pitch, roll, heading;
 
-  BNO_measurements(bno, pitch, roll, heading); // grab BNO readings, 
+  BNO_measurements(bno, pitch, roll, heading); // grab BNO readings,
 
   // Print BNO readings
 
   SerialUSB.printf("Pitch: %f \nRoll: %f \nHeading: %f", pitch, roll, heading);
 
   // Test code for LIDAR
-
-
 }
