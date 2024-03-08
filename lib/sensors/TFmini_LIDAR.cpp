@@ -4,6 +4,9 @@
 //code and walkthrough from https://how2electronics.com/how-to-use-tfmini-s-lidar-distance-sensor-with-arduino/#Overview
 //sensor documentation available here: https://www.sparkfun.com/products/16977 
  
+// The following link has an example for I2C communication with the LIDAR; will probably
+// look to implement this.
+// https://github.com/TFmini/TFmini-Arduino/blob/master/TFmini_Arduino_I2C_1Master1Slave/TFmini_I2C_Master/TFmini_I2C_Master.ino
 
 #include "TFmini_LIDAR.h"
 
@@ -11,7 +14,8 @@ TFMini tfmini;
  
 SoftwareSerial SerialTFMini(2, 3);          //The only value that matters here is the first one, 2, Rx
   //pin related stuff
-
+  // TFmini's pins: PB6 - I2C_SCK
+  //                PB7 - I2C_SDA
 float wrapper_distance = -1;//global vars updated by wrapper function, -1 placeholder, hopefully the code isnt too sketchy
   //dist is in cm
 float wrapper_signal_strength = -1;

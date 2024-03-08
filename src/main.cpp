@@ -6,6 +6,8 @@
 #include "BNO_orientation.cpp"
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
+TFMini tfmini;
+SoftwareSerial SerialTFMini(3, 4);
 
 void setup()
 {
@@ -39,5 +41,7 @@ void loop()
 
   SerialUSB.printf("Pitch: %f \nRoll: %f \nHeading: %f", pitch, roll, heading);
 
-  // Test code for barometer.
+  // Test code for LIDAR
+
+
 }
