@@ -1,7 +1,7 @@
 
 
-#ifndef ORIENTATION_HEADER
-#define ORIENTATION_HEADER
+#ifndef LIDAR_HEADER
+#define LIDAR_HEADER
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>

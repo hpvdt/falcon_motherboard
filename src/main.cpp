@@ -5,6 +5,8 @@
 #include "DPS_barometer.cpp"
 #include "BNO_orientation.cpp"
 
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
+
 void setup()
 {
   SerialUSB.begin();
@@ -15,11 +17,13 @@ void setup()
   
   DPS_setup();  // DPS330 barometer setup
   
-  setup_BNO(); // BNO055 orientation setup
+  BNO_setup(bno); // BNO055 orientation setup
   
   //////////////////////////////////////////////////////////////////////////
   // Probably fix setup functions, I think we need to keep the sensor objects
   // in the scope of the main function
+  //
+  // Done for BNO_setup... may need to pass by reference ?
   //////////////////////////////////////////////////////////////////////////
 
 }
@@ -29,7 +33,11 @@ void loop()
   // Test code for BNO055 orientation module.
   float pitch, roll, heading;
 
-  BNO_measurements(pitch, roll, heading); // grab BNO readings, 
+  BNO_measurements(bno, pitch, roll, heading); // grab BNO readings, 
+
+  // Print BNO readings
+
+  SerialUSB.printf("Pitch: %f \nRoll: %f \nHeading: %f", pitch, roll, heading);
 
   // Test code for barometer.
 }
