@@ -6,7 +6,8 @@
 
 Adafruit_DPS310 dps;
 Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
-HardwareSerial Serial1(PA3, PA2);
+TwoWire mainbus(PB7, PB6);
+
 const int LEDPIN = PC8;
 const int LEDPIN2 = PC9;
 
@@ -19,7 +20,7 @@ void setup() {
 
   SerialUSB.println("DPS310");
 
-  if (! dps.begin_I2C()) {
+  if (! dps.begin_I2C(119, &mainbus)) {
     SerialUSB.println("Failed to find DPS");
     while (1) yield();
   }
