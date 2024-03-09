@@ -52,13 +52,19 @@ void loop()
 {
   IMU.getAGT(); // grab newest readings for accel. and gyro.
   SerialUSB.println("Accelerometer Readings");
-  SerialUSB.printf("a_x: %f \t a_y: %f \t a_z: %f \n", IMU.accX(), IMU.accY(), IMU.accZ());
+  //SerialUSB.printf("a_x: %f \t a_y: %f \t a_z: %f \n", IMU.accX(), IMU.accY(), IMU.accZ());
+  SerialUSB.println("a_x: ");
+  SerialUSB.print(IMU.accX());
+  SerialUSB.println("a_y: ");
+  SerialUSB.print(IMU.accY());
+  SerialUSB.println("a_z: ");
+  SerialUSB.print(IMU.accZ());
   SerialUSB.println("Gyroscope Readings");
-  SerialUSB.print("g_x");
+  SerialUSB.print("g_x: ");
   SerialUSB.println(IMU.gyrX());
-  SerialUSB.print("g_y");
+  SerialUSB.print("g_y: ");
   SerialUSB.println(IMU.gyrY());
-  SerialUSB.print("g_z");
+  SerialUSB.print("g_z: ");
   SerialUSB.println(IMU.gyrZ());
   SerialUSB.print("Temperature: ");
   SerialUSB.println(IMU.temp());
