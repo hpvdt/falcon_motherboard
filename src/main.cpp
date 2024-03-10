@@ -1,45 +1,47 @@
 #include <Arduino.h>
-#include <Adafruit_DPS310.h>
-#include <USBSerial.h>
-#include <Wire.h>
+#include "onewire.hpp"
 
-
-Adafruit_DPS310 dps;
-Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
-HardwareSerial Serial1(PA3, PA2);
+/* Pin allocations
+    PB0 - Resistive dividers for address
+    PB1 - One Wire TX
+    PB2 - Data from HX711
+    PB3 - One Wire RX
+    PB4 - Clock to HX711
+    PB5 - RESET
+*/
+const int owAddMain = 2;
+const int owAddTest = 0b1010; // Hardcoded address for spar boards.
 const int LEDPIN = PC8;
-const int LEDPIN2 = PC9;
+const int owTX  = PC3;
+const int owRX  = PC2;
+const int owAdd = owAddMain;
+
 
 void setup() {
-  SerialUSB.begin();
-  SerialUSB.begin(9600);
-  while (!SerialUSB) delay(10); 
   pinMode(LEDPIN, OUTPUT);
-  pinMode(LEDPIN2, OUTPUT);
+  setupOneWire(owRX, owTX, owAdd, false);
+  Serial.begin(115200);
+  delay(100);
+  Serial.println("RUNNING THE TEST STATION CODE");
+  Serial.println("MISSES / TESTS");
 
-  SerialUSB.println("DPS310");
-
-  if (! dps.begin_I2C()) {
-    SerialUSB.println("Failed to find DPS");
-    while (1) yield();
-  }
-  SerialUSB.println("DPS OK!");
-
-  // Setup highest precision
-  dps.configurePressure(DPS310_64HZ, DPS310_64SAMPLES);
-  dps_pressure->printSensorDetails();
+  int32_t rec;
+  requestOneWire(owAddTest, &rec);
+  Serial.println(rec);
 }
 
 void loop() {
   digitalWrite(LEDPIN, HIGH);
-  digitalWrite(LEDPIN2, HIGH);
-  delay(1000);
-  sensors_event_t pressure_event;
-  if (dps.pressureAvailable()) {
-    dps_pressure->getEvent(&pressure_event);
-    SerialUSB.print(F("Pressure = "));
-    SerialUSB.print(pressure_event.pressure);
-    SerialUSB.println(" hPa"); 
-    SerialUSB.println();
-  }
+  static unsigned int count = 0;
+  static unsigned int missed = 0;
+
+  int32_t rec = 0;
+  if (requestOneWire(owAddTest, &rec) == false) missed++;
+  count++;
+
+  // Serial.print(missed);
+  // Serial.print("/");
+  // Serial.println(count);
+  Serial.println(rec);
+  delay(5);
 }
