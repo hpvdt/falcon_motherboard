@@ -12,27 +12,31 @@ Adafruit_DPS310 dps;
 Adafruit_Sensor *dps_temp = dps.getTemperatureSensor();
 Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
 TwoWire i2c1(PB7, PB6);
+SPIClass int_telemetry_bus(PA7, PA6, PA5);
 
 void setup() {
   pinMode(LEDPIN, OUTPUT);
   pinMode(LEDPIN2, OUTPUT);
 
-  Serial.begin(9600); 
-  while(!Serial);{
+  SerialUSB.begin(9600); 
+  while(!SerialUSB){
+    delay(100);
   }
+  digitalWrite(LEDPIN, HIGH);
 
-  if (!radio1.begin()) {
-    Serial.println("Radio not responding");
+  if (!radio1.begin(&int_telemetry_bus, PB5, PB9)) {
+    SerialUSB.println("Radio not responding");
     while (1) {};
   }
-  Serial.println("Radio connected");
+  SerialUSB.println("Radio connected");
+  digitalWrite(LEDPIN2, HIGH);
 
   if (!dps.begin_I2C(119U, &i2c1)){
-    Serial.println("DPS310 initalization failed");
+    SerialUSB.println("DPS310 initalization failed");
     while (1) {
     };
   }
-  Serial.println("DPS310 connected");
+  SerialUSB.println("DPS310 connected");
 
   radio1.setPALevel(RF24_PA_LOW);
   radio1.openWritingPipe(interior_address);
