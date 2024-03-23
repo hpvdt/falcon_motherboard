@@ -1,34 +1,46 @@
 #include <Arduino.h>
-#include "ICM42688.h"
-/* Using an Arduino library for the ICM42688 maintained by Inhwan Wee.
-   https://github.com/finani/ICM42688/
-*/
-ICM42688 IMU(SPI, 10); // initializes an ICM chip object, specifying
-                       // protocol + pin select for serial communication
-                       // defaults to 8MHz clock, but a third parameter can be
-                       // passed to specify up to 24 MHz.
-                       // probably refer to motherboard schematic for specific pin
+#include <Adafruit_DPS310.h>
+#include <USBSerial.h>
+#include <Wire.h>
+
+
+Adafruit_DPS310 dps;
+Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
+TwoWire mainbus(PB7, PB6);
+
+const int LEDPIN = PC8;
+const int LEDPIN2 = PC9;
 
 void setup() {
   SerialUSB.begin();
-  while (!SerialUSB) delay(10); // Wait for USB connection to be made to the computer before continuing
+  SerialUSB.begin(9600);
+  while (!SerialUSB) delay(10); 
+  pinMode(LEDPIN, OUTPUT);
+  pinMode(LEDPIN2, OUTPUT);
+
+  SerialUSB.println("DPS310");
+
+  if (! dps.begin_I2C(119, &mainbus)) {
+    SerialUSB.println("Failed to find DPS");
+    while (1) yield();
+  }
+  SerialUSB.println("DPS OK!");
+
+  // Setup highest precision
+  dps.configurePressure(DPS310_64HZ, DPS310_64SAMPLES);
+  dps_pressure->printSensorDetails();
 }
 
 void loop() {
-  // start communication with IMU
-  SerialUSB.println("initializing...");
-  int status = IMU.begin();
-  if (status < 0)
-  {
-    SerialUSB.println("IMU initialization failed");
-    SerialUSB.print("Status: ");
-    SerialUSB.println(status);
-    while (1)
-    {
-    }
+  digitalWrite(LEDPIN, HIGH);
+  digitalWrite(LEDPIN2, HIGH);
+  delay(1000);
+  sensors_event_t pressure_event;
+  if (dps.pressureAvailable()) {
+    dps_pressure->getEvent(&pressure_event);
+    SerialUSB.print(F("Pressure = "));
+    SerialUSB.print(pressure_event.pressure);
+    SerialUSB.println(" hPa"); 
+    SerialUSB.println();
   }
-
-  SerialUSB.println("good to go");
-
-  delay(20);
 }
