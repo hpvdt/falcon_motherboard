@@ -1,46 +1,103 @@
 #include <Arduino.h>
-#include <Adafruit_DPS310.h>
+#include <Adafruit_Sensor.h>
 #include <USBSerial.h>
 #include <Wire.h>
+#include <Adafruit_BusIO_Register.h>
 
+#include "co2.h"
+#include <DHT.h>
+#include <DHT_U.h>
 
-Adafruit_DPS310 dps;
-Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
-TwoWire mainbus(PB7, PB6);
+#define DHT_PIN PB1
+#define DHT_TYPE DHT22
 
 const int LEDPIN = PC8;
 const int LEDPIN2 = PC9;
 
-void setup() {
+uint32_t delayMS;
+DHT_Unified dht(DHT_PIN, DHT_TYPE);
+
+void setup()
+{
   SerialUSB.begin();
-  SerialUSB.begin(9600);
-  while (!SerialUSB) delay(10); 
-  pinMode(LEDPIN, OUTPUT);
-  pinMode(LEDPIN2, OUTPUT);
+  setupCO2();
 
-  SerialUSB.println("DPS310");
+  dht.begin();
 
-  if (! dps.begin_I2C(119, &mainbus)) {
-    SerialUSB.println("Failed to find DPS");
-    while (1) yield();
-  }
-  SerialUSB.println("DPS OK!");
+  sensor_t sensor;
+  dht.temperature().getSensor(&sensor);
+  SerialUSB.println(F("------------------------------------"));
+  SerialUSB.println(F("Temperature Sensor"));
+  SerialUSB.print(F("Sensor Type: "));
+  SerialUSB.println(sensor.name);
+  SerialUSB.print(F("Driver Ver:  "));
+  SerialUSB.println(sensor.version);
+  SerialUSB.print(F("Unique ID:   "));
+  SerialUSB.println(sensor.sensor_id);
+  SerialUSB.print(F("Max Value:   "));
+  SerialUSB.print(sensor.max_value);
+  SerialUSB.println(F("°C"));
+  SerialUSB.print(F("Min Value:   "));
+  SerialUSB.print(sensor.min_value);
+  SerialUSB.println(F("°C"));
+  SerialUSB.print(F("Resolution:  "));
+  SerialUSB.print(sensor.resolution);
+  SerialUSB.println(F("°C"));
+  SerialUSB.println(F("------------------------------------"));
 
-  // Setup highest precision
-  dps.configurePressure(DPS310_64HZ, DPS310_64SAMPLES);
-  dps_pressure->printSensorDetails();
+  // Print humidity sensor details.
+  dht.humidity().getSensor(&sensor);
+  SerialUSB.println(F("Humidity Sensor"));
+  SerialUSB.print(F("Sensor Type: "));
+  SerialUSB.println(sensor.name);
+  SerialUSB.print(F("Driver Ver:  "));
+  SerialUSB.println(sensor.version);
+  SerialUSB.print(F("Unique ID:   "));
+  SerialUSB.println(sensor.sensor_id);
+  SerialUSB.print(F("Max Value:   "));
+  SerialUSB.print(sensor.max_value);
+  SerialUSB.println(F("%"));
+  SerialUSB.print(F("Min Value:   "));
+  SerialUSB.print(sensor.min_value);
+  SerialUSB.println(F("%"));
+  SerialUSB.print(F("Resolution:  "));
+  SerialUSB.print(sensor.resolution);
+  SerialUSB.println(F("%"));
+  SerialUSB.println(F("------------------------------------"));
+  // Set delay between sensor readings based on sensor details.
+  delayMS = sensor.min_delay / 1000;
 }
 
-void loop() {
-  digitalWrite(LEDPIN, HIGH);
-  digitalWrite(LEDPIN2, HIGH);
-  delay(1000);
-  sensors_event_t pressure_event;
-  if (dps.pressureAvailable()) {
-    dps_pressure->getEvent(&pressure_event);
-    SerialUSB.print(F("Pressure = "));
-    SerialUSB.print(pressure_event.pressure);
-    SerialUSB.println(" hPa"); 
-    SerialUSB.println();
+void loop()
+{
+
+  SerialUSB.print("CO2 PPM: ");
+  SerialUSB.println(CO2ppm);
+  // Delay between measurements.
+  delay(delayMS);
+  // Get temperature event and print its value.
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  if (isnan(event.temperature))
+  {
+    Serial.println(F("Error reading temperature!"));
+  }
+  else
+  {
+    Serial.print(F("Temperature: "));
+    Serial.print(event.temperature);
+    Serial.println(F("°C"));
+  }
+  // Get humidity event and print its value.
+  dht.humidity().getEvent(&event);
+  if (isnan(event.relative_humidity))
+  {
+    Serial.println(F("Error reading humidity!"));
+  }
+  else
+  {
+    Serial.print(F("Humidity: "));
+    Serial.print(event.relative_humidity);
+    Serial.println(F("%"));
   }
 }
