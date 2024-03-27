@@ -41,8 +41,12 @@ bool radioNumber = 1;  // 0 uses address[0] to transmit, 1 uses address[1] to tr
 // For this example, we'll be using a payload containing
 // a single float number that will be incremented
 // on every successful transmission
-float payload = 0.0;
+struct PayloadStruct {
+  long data[2];  // only using 6 characters for TX & ACK payloads
+};
+PayloadStruct payload;
 
+float data = 0.0;
 void setup() {
 
   SerialUSB.begin(115200);
@@ -77,6 +81,7 @@ void setup() {
   // save on transmission time by setting the radio to only transmit the
   // number of bytes we need to transmit a float
   radio.setPayloadSize(sizeof(payload));  // float datatype occupies 4 bytes
+  radio.enableAckPayload();
 
   // set the TX address of the RX node into the TX pipe
   radio.openWritingPipe(address[radioNumber]);  // always uses pipe 0
@@ -84,6 +89,7 @@ void setup() {
   // additional setup specific to the node's role
   radio.stopListening();  // put radio in TX mode
   radio.setAutoAck(true);
+ 
   // For debugging info
   printf_begin();             // needed only once for printing details
   radio.printDetails();       // (smaller) function that prints raw register values
@@ -95,12 +101,20 @@ void loop() {
   // This device is a TX node
   digitalWrite(LEDPIN1, HIGH);
   unsigned long start_timer = micros();                  // start the timer
-  bool report = radio.write(&payload, sizeof(float));  // transmit & save the report
+  bool report = radio.write(&payload, sizeof(float));    // transmit & save the report
   unsigned long end_timer = micros();                    // end the timer
 
   if (report) {
-    SerialUSB.println(payload);  // print payload sent
-    payload = payload + 0.1;     // increment float payload
+    SerialUSB.println(data);  // print payload sent
+    data = data + 0.1;     // increment float payload
+    uint8_t pipe;
+    if (radio.available(&pipe)) {  // is there an ACK payload? grab the pipe number that received it
+        PayloadStruct received;
+        radio.read(&received, sizeof(received));  // get incoming ACK payload
+        SerialUSB.println(received.data[0]);    // print incoming message
+      } else {
+        SerialUSB.println(F(" Recieved: an empty ACK packet"));  // empty ACK packet received
+      }
   } else {
     SerialUSB.println(F("Transmission failed or timed out"));  // payload was not delivered
   }
