@@ -12,7 +12,9 @@
 extern uint32_t delayMS;
 extern DHT_Unified dht;
 
+extern double temperature, humidity;
+
 void setupDHT();
-void DHT_measurements();
+void DHT_measurements(); // These will grab new readings from the DHT.
 
 #endif

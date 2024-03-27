@@ -1,6 +1,8 @@
 #include "dht22.h"
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
+uint32_t delayMS;
+double humidity, temperature;
 
 void setupDHT() {
 
@@ -24,6 +26,7 @@ void DHT_measurements() {
     SerialUSB.print(F("Temperature: "));
     SerialUSB.print(event.temperature);
     SerialUSB.println(F("°C"));
+    temperature = event.temperature;
   }
   // Get humidity event and print its value.
   dht.humidity().getEvent(&event);
@@ -36,6 +39,7 @@ void DHT_measurements() {
     SerialUSB.print(F("Humidity: "));
     SerialUSB.print(event.relative_humidity);
     SerialUSB.println(F("%"));
+    humidity = event.relative_humidity;
   }
 
 }
