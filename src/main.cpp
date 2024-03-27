@@ -17,15 +17,14 @@ void setup()
 void loop()
 {
   // should we be calling CO2change() function? Nah I think it's called by interrupts
-  SerialUSB.print("CO2 PPM: ");
-  SerialUSB.println(CO2ppm);
+
   // Delay between measurements.
   measureDHT();
   measureIMU();
-  SerialUSB.println("DHT22 Readings");
-  SerialUSB.print("Temperature: ");
-  SerialUSB.println(temperature);
-  SerialUSB.print("Humidity: ");
-  SerialUSB.println(humidity);
+
+  printIMU();
+  printDHT();
+  printCO2();
+
   delay(1000);
 }

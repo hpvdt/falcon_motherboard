@@ -13,5 +13,6 @@ extern double temperature, humidity;
 
 void setupDHT();
 void measureDHT(); // These will grab new readings from the DHT.
+void printDHT();
 
 #endif

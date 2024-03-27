@@ -43,3 +43,9 @@ void setupCO2() {
 
   attachInterrupt(CO2Pin, CO2change, CHANGE);
 }
+
+void printCO2() {
+  SerialUSB.println("CO2 Sensor Readings: ~~~~~~~~~~~~~~~~~~~~~~");
+  SerialUSB.print("CO2 PPM: ");
+  SerialUSB.println(CO2ppm);
+}

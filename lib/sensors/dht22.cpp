@@ -22,9 +22,11 @@ void measureDHT() {
   }
   else
   {
+    /*
     SerialUSB.print(F("Temperature: "));
     SerialUSB.print(event.temperature);
     SerialUSB.println(F("°C"));
+    */
     temperature = event.temperature;
   }
   // Get humidity event and print its value.
@@ -35,10 +37,22 @@ void measureDHT() {
   }
   else
   {
+    /*
     SerialUSB.print(F("Humidity: "));
     SerialUSB.print(event.relative_humidity);
     SerialUSB.println(F("%"));
+    */
     humidity = event.relative_humidity;
   }
 
+}
+
+void printDHT() {
+  SerialUSB.println("DHT22 Readings ~~~~~~~~~~~~~~~~~~~~~~");
+  SerialUSB.print("DHT22 Temperature: ");
+  SerialUSB.print(temperature);
+  SerialUSB.println("°C");
+  SerialUSB.print("DHT22 Humidity: ");
+  SerialUSB.print(humidity);
+  SerialUSB.println("%");
 }
