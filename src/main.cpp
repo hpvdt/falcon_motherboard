@@ -5,20 +5,11 @@
 
 void setup()
 {
-  /*    some debugging LED code
-  pinMode(PC8, OUTPUT);   // Top green
-  pinMode(PC9, OUTPUT);   // Middle green
-  pinMode(PB12, OUTPUT);  // Bottom red
 
-  digitalWrite(PC8, HIGH);
-  digitalWrite(PC9, HIGH);
-  digitalWrite(PB12, LOW);
-  */
-  
   while (!SerialUSB) delay(10); 
   // Wait for USB connection to be made to the computer before continuing
 
-  IMU_setup();
+  setupIMU();
 
   delay(10);
   SerialUSB.begin();
@@ -26,6 +17,6 @@ void setup()
 
 void loop()
 {
-  IMU_measurements();
+  measureIMU();
   delay(1000);
 }
