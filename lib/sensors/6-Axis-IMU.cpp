@@ -7,6 +7,8 @@ ICM42688 IMU(IMUspi, PB10);        // initializes an ICM chip object, specifying
                                    // passed to specify up to 24 MHz.
                                    // PB10 is chip select pin.
 
+double accX, accY, accZ, gyrX, gyrY, gyrZ;
+
 void setupIMU() {
     // hi
 
