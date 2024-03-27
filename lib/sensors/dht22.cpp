@@ -1,18 +1,17 @@
 #include "dht22.h"
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
-uint32_t delayMS;
+uint32_t delayMS_DHT;
 double humidity, temperature;
 
 void setupDHT() {
 
     dht.begin();
     sensor_t sensor;
-    delayMS = sensor.min_delay / 1000;
+    delayMS_DHT = sensor.min_delay / 1000;
 
 }
-void DHT_measurements() {
-    // hi
+void measureDHT() {
 
     // Get temperature event and print its value.
   sensors_event_t event;

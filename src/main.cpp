@@ -7,7 +7,6 @@
 void setup()
 {
   SerialUSB.begin();
-  SerialUSB.println("SETTING UP.");
   setupCO2();
   setupDHT();
 }
@@ -18,7 +17,7 @@ void loop()
   SerialUSB.print("CO2 PPM: ");
   SerialUSB.println(CO2ppm);
   // Delay between measurements.
-  DHT_measurements();
+  measureDHT();
   SerialUSB.println("DHT22 Readings");
   SerialUSB.print("Temperature: ");
   SerialUSB.println(temperature);
