@@ -1,14 +1,17 @@
 #include <USBSerial.h>
 #include <Wire.h>
-
 #include "co2.h"
 #include "dht22.h"
-
+#include "6-Axis-IMU.h"
+/* Using an Arduino library for the ICM42688 maintained by Inhwan Wee.
+   https://github.com/finani/ICM42688/
+*/
 void setup()
 {
   SerialUSB.begin();
   setupCO2();
   setupDHT();
+  setupIMU();
 }
 
 void loop()
@@ -18,6 +21,7 @@ void loop()
   SerialUSB.println(CO2ppm);
   // Delay between measurements.
   measureDHT();
+  measureIMU();
   SerialUSB.println("DHT22 Readings");
   SerialUSB.print("Temperature: ");
   SerialUSB.println(temperature);
