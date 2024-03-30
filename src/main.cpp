@@ -101,7 +101,7 @@ void loop() {
   // This device is a TX node
   digitalWrite(LEDPIN1, HIGH);
   unsigned long start_timer = micros();                  // start the timer
-  bool report = radio.write(&payload, sizeof(float));    // transmit & save the report
+  bool report = radio.write(&data, sizeof(float));    // transmit & save the report
   unsigned long end_timer = micros();                    // end the timer
 
   if (report) {
