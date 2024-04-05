@@ -4,11 +4,11 @@
 #define LIDAR_HEADER
 
 #include <Arduino.h>
-#include <SoftwareSerial.h>
-#include "TFMini.h"
+#include "TFMPI2C.h"
+
+void TFminisetup();
 
 void getTFminidata(int *distance, int *strength);
 
-void TFminisetup();
 
 #endif
