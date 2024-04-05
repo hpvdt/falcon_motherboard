@@ -29,13 +29,11 @@ void loop()
 {
   // Test code for BNO055 orientation module.
   float pitch, roll, heading;
+  static int distance = 0;
 
   BNO_measurements(pitch, roll, heading); // grab BNO readings,
-  static int distance = 0;
+
   getTFminidata(&distance);
   
-
   SerialUSB.printf("Pitch: %f \nRoll: %f \nHeading: %f", pitch, roll, heading);
-
-  // Test code for LIDAR
 }

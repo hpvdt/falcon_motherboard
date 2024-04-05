@@ -8,7 +8,7 @@
 #include <Adafruit_DPS310.h>//arduino yay
 
 //void measurements();//altitude measures
-void pressureCheck();
+void pressureCheck(int *press);
 void DPS_setup();
 
 extern byte pressure;
