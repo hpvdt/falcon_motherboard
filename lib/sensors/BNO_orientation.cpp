@@ -3,13 +3,14 @@
 
 #include "BNO_orientation.h"
 
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;
 
 // Check I2C device address and correct line below (by default address is 0x29 or 0x28)
 //                                   id, address
 
-void BNO_measurements(Adafruit_BNO055 bno, float pitch, float roll, float heading)
+void BNO_measurements(float pitch, float roll, float heading)
 { 
     sensors_event_t orientationData;
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER); // get orientation, euler vectors ok up to 45 degrees
@@ -18,7 +19,7 @@ void BNO_measurements(Adafruit_BNO055 bno, float pitch, float roll, float headin
     heading = orientationData.orientation.x; // some issues with the .heading, .pitch stuff
 }
 
-void BNO_setup(Adafruit_BNO055 bno)
+void BNO_setup()
 {
     
     if (!bno.begin())

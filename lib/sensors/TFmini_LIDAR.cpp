@@ -29,10 +29,10 @@ void TFminisetup()
 }
 
 void getTFminidata(int *distance){
-  int16_t temp;
-  tfmini.getData(temp); // Get a frame of data
-  *distance = temp;
   if(tfmini.status == TFMP_READY){
+    int16_t temp;
+    tfmini.getData(temp); // Get a frame of data
+    *distance = temp;
   }
 }
 

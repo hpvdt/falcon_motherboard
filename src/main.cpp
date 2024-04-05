@@ -15,7 +15,7 @@ void setup()
 
   DPS_setup(); // DPS330 barometer setup
 
-  // BNO_setup(bno); // BNO055 orientation setup
+  BNO_setup(); // BNO055 orientation setup
 
   //////////////////////////////////////////////////////////////////////////
   // Probably fix setup functions, I think we need to keep the sensor objects
@@ -30,7 +30,7 @@ void loop()
   // Test code for BNO055 orientation module.
   float pitch, roll, heading;
 
-  // BNO_measurements(bno, pitch, roll, heading); // grab BNO readings,
+  BNO_measurements(pitch, roll, heading); // grab BNO readings,
   static int distance = 0;
   getTFminidata(&distance);
   
