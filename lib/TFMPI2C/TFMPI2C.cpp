@@ -93,6 +93,7 @@ bool TFMPI2C::getData( int16_t &dist, int16_t &flux, int16_t &temp, uint8_t addr
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // The device can also return data in millimeters, but its
     // resolution is only 5mm (o.5cm) and its accuracy is ±5cm.
+    // SerialUSB.println("test4");
     if( sendCommand( I2C_FORMAT_CM, 0, addr) != true) return false;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,8 +101,9 @@ bool TFMPI2C::getData( int16_t &dist, int16_t &flux, int16_t &temp, uint8_t addr
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Request one data-frame from the slave device address
     // and close the I2C interface.
+    // SerialUSB.println("test1");
     tfBus->requestFrom( (int)addr, TFMP_FRAME_SIZE, true);
-
+    // SerialUSB.println("test");
     memset( frame, 0, sizeof( frame));     // Clear the data-frame buffer.
     for( uint8_t i = 0; i < TFMP_FRAME_SIZE; i++)
     {
@@ -234,14 +236,13 @@ bool TFMPI2C::sendCommand( uint32_t cmnd, uint32_t param, uint8_t addr)
         tfBus->endTransmission( true);   // Send and Close the I2C interface.
         return false;             // and return "false."
     }
-
     // Transmit the bytes and a stop message to release the I2C bus.
     if( tfBus->endTransmission( true) != 0)  // If write error...
     {
+        SerialUSB.println();
         status = TFMP_I2CWRITE;       // then set satus code...
         return false;                 // and return "false."
     }
-
     // + + + + + + + + + + + + + + + + + + + + + + + + +
     // If no reply data expected, then go home. Otherwise,
     // wait for device to process the command and continue.

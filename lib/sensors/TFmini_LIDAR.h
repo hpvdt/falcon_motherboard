@@ -8,7 +8,7 @@
 
 void TFminisetup();
 
-void getTFminidata(int *distance, int *strength);
+void getTFminidata(int *distance);
 
 
 #endif

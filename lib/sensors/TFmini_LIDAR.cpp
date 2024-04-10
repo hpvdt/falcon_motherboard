@@ -11,7 +11,10 @@
 #include "TFMPI2C.h"
 #include "Wire.h"
 
-TwoWire tfbus(PB7, PB6);
+const uint32_t TF_SDA = PB7;
+const uint32_t TF_SCL = PB6;
+
+TwoWire tfbus(TF_SDA, TF_SCL);
 TFMPI2C tfmini(&tfbus);
 
 int16_t tfDist = 0;       // Distance to object in centimeters
@@ -29,10 +32,9 @@ void TFminisetup()
 }
 
 void getTFminidata(int *distance){
-  if(tfmini.status == TFMP_READY){
-    int16_t temp;
-    tfmini.getData(temp); // Get a frame of data
-    *distance = temp;
+  tfmini.getData( tfDist, tfFlux, tfTemp); // Get a frame of data
+  if( tfmini.status == TFMP_READY){
+    *distance = tfDist;
   }
 }
 
