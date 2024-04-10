@@ -11,11 +11,7 @@
 #include "TFMPI2C.h"
 #include "Wire.h"
 
-const uint32_t TF_SDA = PB7;
-const uint32_t TF_SCL = PB6;
-
-TwoWire tfbus(TF_SDA, TF_SCL);
-TFMPI2C tfmini(&tfbus);
+TFMPI2C tfmini;
 
 int16_t tfDist = 0;       // Distance to object in centimeters
 int16_t tfFlux = 0;       // Signal strength or quality of return signal
@@ -25,8 +21,9 @@ int16_t tfTemp = 0;       // Internal temperature of Lidar sensor chip
   // TFmini's pins: PB6 - I2C_SCK
   //                PB7 - I2C_SDA
 
-void TFminisetup()
+void TFminisetup(TwoWire tfbus)
 {
+  tfmini.setI2Cbus(&tfbus);
   Serial.begin(115200);       // Initialize hardware serial port (serial debug port)
   tfbus.begin();              // Initialize two-wire interface  
 }

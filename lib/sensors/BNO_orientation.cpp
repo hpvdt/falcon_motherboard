@@ -3,6 +3,7 @@
 
 #include "BNO_orientation.h"
 
+// Need to put this in the setup function and take the i2c bus as an input, can't use default bus
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;

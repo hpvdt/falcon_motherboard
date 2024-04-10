@@ -76,10 +76,12 @@
 
 
 // Constructor/Destructor
-TFMPI2C::TFMPI2C(TwoWire* bus){
+TFMPI2C::TFMPI2C(){}
+TFMPI2C::~TFMPI2C(){}
+
+void TFMPI2C::setI2Cbus(TwoWire* bus){
   tfBus = bus;
 }
-TFMPI2C::~TFMPI2C(){}
 
 // = = = = =  GET A FRAME OF DATA FROM THE DEVICE  = = = = = = = = = =
 //

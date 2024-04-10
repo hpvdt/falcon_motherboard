@@ -10,12 +10,11 @@
 // debug to figure out how to include this, maybe use setup function
 Adafruit_DPS310 dps;
 Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
-TwoWire barometer_bus(PB7, PB6);
 
-void DPS_setup()
+void DPS_setup(TwoWire dpsbus)
 {
   SerialUSB.begin(115200);
-  if (!dps.begin_I2C(119, &barometer_bus))
+  if (!dps.begin_I2C(119, &dpsbus))
   {
     // Something went wrong...
     SerialUSB.println("DPS not worketh");

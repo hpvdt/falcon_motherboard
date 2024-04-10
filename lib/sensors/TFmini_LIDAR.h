@@ -5,8 +5,9 @@
 
 #include <Arduino.h>
 #include "TFMPI2C.h"
+#include <Wire.h>
 
-void TFminisetup();
+void TFminisetup(TwoWire tfbus);
 
 void getTFminidata(int *distance);
 

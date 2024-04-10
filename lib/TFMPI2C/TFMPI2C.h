@@ -199,13 +199,15 @@ class TFMPI2C
   private:
     TwoWire* tfBus;
   public:
-    TFMPI2C(TwoWire* bus);
+    TFMPI2C();
     ~TFMPI2C();
 
     uint8_t version[ 3];   // three digit firmware version
     uint8_t status;        // system error status: READY = 0
     uint8_t format;        // distance data format: CENTI or MILLI
     char scale;            // temperature scale: FAREN or CELSI
+
+    void setI2Cbus(TwoWire* bus);
 
     // Get device data-frame and pass back three values
     // using explicit I2C address
