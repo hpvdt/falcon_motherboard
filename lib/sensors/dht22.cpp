@@ -2,7 +2,7 @@
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
 uint32_t delayMS_DHT;
-double humidity, temperature;
+double humidity, temperature, lastDHT;
 
 void setupDHT() {
 
@@ -13,6 +13,7 @@ void setupDHT() {
 }
 void measureDHT() {
 
+  if (millis() < lastDHT + delayMS_DHT) return;
     // Get temperature event and print its value.
   sensors_event_t event;
   dht.temperature().getEvent(&event);
@@ -44,7 +45,7 @@ void measureDHT() {
     */
     humidity = event.relative_humidity;
   }
-
+  lastDHT = millis();
 }
 
 void printDHT() {
