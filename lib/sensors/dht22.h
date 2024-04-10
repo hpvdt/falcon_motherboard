@@ -9,10 +9,10 @@
 #define DHT_PIN PB1
 #define DHT_TYPE DHT22
 
-extern double temperature, humidity, lastDHT;
+
 
 void setupDHT();
-void measureDHT(); // These will grab new readings from the DHT.
+void measureDHT(double* temperature, double* humidity); // These will grab new readings from the DHT.
 void printDHT();
 
 #endif

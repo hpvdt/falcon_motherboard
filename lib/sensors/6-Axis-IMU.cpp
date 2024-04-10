@@ -7,8 +7,6 @@ ICM42688 IMU(IMUspi, PB10);        // initializes an ICM chip object, specifying
                                    // passed to specify up to 24 MHz.
                                    // PB10 is chip select pin.
 
-double accX, accY, accZ, gyrX, gyrY, gyrZ, tempIMU;
-
 void setupIMU() {
     // hi
 
@@ -25,19 +23,19 @@ void setupIMU() {
   }
 }
 
-void measureIMU() {
+void measureIMU(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU) {
 
   IMU.getAGT(); // grab newest readings for accel. and gyro.
   
-  accX = IMU.accX();
-  accY = IMU.accY();
-  accZ = IMU.accZ();
+  *accX = IMU.accX();
+  *accY = IMU.accY();
+  *accZ = IMU.accZ();
 
-  gyrX = IMU.gyrX();
-  gyrY = IMU.gyrY();
-  gyrZ = IMU.gyrZ();
+  *gyrX = IMU.gyrX();
+  *gyrY = IMU.gyrY();
+  *gyrZ = IMU.gyrZ();
 
-  tempIMU = IMU.temp();
+  *tempIMU = IMU.temp();
 
 }
 
@@ -45,18 +43,18 @@ void printIMU() {
   SerialUSB.println("ICM42688 Readings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
   SerialUSB.println("Accelerometer Readings");
   SerialUSB.print("a_x: ");
-  SerialUSB.println(accX);
+  SerialUSB.println(IMU.accX());
   SerialUSB.print("a_y: ");
-  SerialUSB.println(accY);
+  SerialUSB.println(IMU.accY());
   SerialUSB.print("a_z: ");
-  SerialUSB.println(accZ);
+  SerialUSB.println(IMU.accZ());
   SerialUSB.println("Gyroscope Readings");
   SerialUSB.print("g_x: ");
-  SerialUSB.println(gyrX);
+  SerialUSB.println(IMU.gyrX());
   SerialUSB.print("g_y: ");
-  SerialUSB.println(gyrY);
+  SerialUSB.println(IMU.gyrY());
   SerialUSB.print("g_z: ");
-  SerialUSB.println(gyrZ);
+  SerialUSB.println(IMU.gyrZ());
   SerialUSB.print("ICM42688 Temperature: ");
-  SerialUSB.println(tempIMU);
+  SerialUSB.println(IMU.temp());
 }

@@ -8,6 +8,7 @@
 #include <Arduino.h>
 
 extern volatile int CO2ppm; // CO2 level in ppm
+// Is it possible to update a dereferenced pointer in an interrupt?
 
 void setupCO2();
 void CO2change();
