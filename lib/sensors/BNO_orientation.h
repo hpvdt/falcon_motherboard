@@ -10,7 +10,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 
-void BNO_measurements(float pitch, float roll, float heading); // altitude measures
-void BNO_setup(); 
+void BNO_measurements(float* pitch, float* roll, float* heading); 
+void BNO_setup(TwoWire* bno_bus); 
 
 #endif

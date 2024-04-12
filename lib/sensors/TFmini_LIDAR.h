@@ -7,9 +7,9 @@
 #include "TFMPI2C.h"
 #include <Wire.h>
 
-void TFminisetup(TwoWire tfbus);
+void TFminisetup(TwoWire* tfbus);
 
-void getTFminidata(int *distance);
+void getTFminidata(float *distance);
 
 
 #endif

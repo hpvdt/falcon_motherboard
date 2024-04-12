@@ -1,20 +1,16 @@
 // Code originally written by George Wang, imported from
 // the Aircraft_Data repository
 
-// This example shows how to read temperature/pressure from adafruit library
-// walkthrough and code: https://learn.adafruit.com/adafruit-dps310-precision-barometric-pressure-sensor/arduino
-
 #include "DPS_barometer.h"
 #include "Wire.h"
 
-// debug to figure out how to include this, maybe use setup function
 Adafruit_DPS310 dps;
 Adafruit_Sensor *dps_pressure = dps.getPressureSensor();
 
-void DPS_setup(TwoWire dpsbus)
+void DPS_setup(TwoWire * dpsbus)
 {
   SerialUSB.begin(115200);
-  if (!dps.begin_I2C(119, &dpsbus))
+  if (!dps.begin_I2C(119, dpsbus))
   {
     // Something went wrong...
     SerialUSB.println("DPS not worketh");
@@ -26,7 +22,7 @@ void DPS_setup(TwoWire dpsbus)
   dps.configureTemperature(DPS310_64HZ, DPS310_64SAMPLES);
 }
 
-void pressureCheck(int *press)
+void pressureCheck(float *press)
 {
  sensors_event_t temp_event, pressure_event;
   if (dps.pressureAvailable()){

@@ -14,7 +14,8 @@ const uint32_t SCL1 = PB6;
 
 TwoWire maini2c(SDA1, SCL1);
 
-int distance = 0;
+float distance = 0;
+float press = 0.0;
 
 void setup()
 {
@@ -24,38 +25,29 @@ void setup()
   digitalWrite(LEDPIN1, HIGH);
   SerialUSB.begin(115200);
   while (!SerialUSB)
-    delay(10); // Wait for USB connection to be made to the computer before continuing
+    delay(10);                // Wait for USB connection to be made to the computer before continuing
 
-  digitalWrite(LEDPIN2, HIGH);
+  TFminisetup(&maini2c);      // TFmini LIDAR setup
 
-  TFminisetup(maini2c); // TFmini LIDAR setup
+  DPS_setup(&maini2c);        // DPS310 barometer setup
 
-  DPS_setup(maini2c); // DPS310 barometer setup
+  //BNO_setup(&maini2c);              // BNO055 orientation setup
 
-  //BNO_setup(); // BNO055 orientation setup
-
-  //////////////////////////////////////////////////////////////////////////
-  // Probably fix setup functions, I think we need to keep the sensor objects
-  // in the scope of the main function
-  //
-  // Done for BNO_setup... may need to pass by reference ?
-  //////////////////////////////////////////////////////////////////////////
 }
 
 void loop()
 {
   // Test code for BNO055 orientation module.
-  //float pitch, roll, heading;
-  int press = 0;
+  // float pitch, roll, heading;
 
   //BNO_measurements(pitch, roll, heading); // grab BNO readings,
   digitalWrite(LEDPIN3, HIGH);
   pressureCheck(&press);
+
   SerialUSB.println(press);
   getTFminidata(&distance);
-
+  digitalWrite(LEDPIN2, HIGH);
   SerialUSB.println(distance);
-
 
   delay(1000);
   
