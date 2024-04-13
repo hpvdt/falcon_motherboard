@@ -23,6 +23,7 @@ void setupIMU() {
   }
 }
 
+
 void measureIMU(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU) {
 
   IMU.getAGT(); // grab newest readings for accel. and gyro.
