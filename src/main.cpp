@@ -21,6 +21,8 @@ TwoWire maini2c(SDA1, SCL1);
 float distance = 0.0;
 float press = 0.0;
 float pitch, roll, heading;
+double humidity, DHTtemp;
+double accX, accY, accZ, gyrX, gyrY, gyrZ, IMUtemp;
 
 void setup()
 {
@@ -50,8 +52,8 @@ void loop()
   BNO_measurements(&pitch, &roll, &heading); // grab BNO readings,
   getTFminidata(&distance);
   pressureCheck(&press);
-  measureDHT();
-  measureIMU();
+  measureDHT(&DHTtemp, &humidity);
+  measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
 
   digitalWrite(LEDPIN1, HIGH);
 
