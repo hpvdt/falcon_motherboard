@@ -7,7 +7,7 @@ ICM42688 IMU(IMUspi, PB10);        // initializes an ICM chip object, specifying
                                    // passed to specify up to 24 MHz.
                                    // PB10 is chip select pin.
 
-void IMU_setup() {
+void setupIMU() {
     // hi
 
       // start communication with IMU
@@ -23,9 +23,25 @@ void IMU_setup() {
   }
 }
 
-void IMU_measurements() {
+
+void measureIMU(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU) {
 
   IMU.getAGT(); // grab newest readings for accel. and gyro.
+  
+  *accX = IMU.accX();
+  *accY = IMU.accY();
+  *accZ = IMU.accZ();
+
+  *gyrX = IMU.gyrX();
+  *gyrY = IMU.gyrY();
+  *gyrZ = IMU.gyrZ();
+
+  *tempIMU = IMU.temp();
+
+}
+
+void printIMU() {
+  SerialUSB.println("ICM42688 Readings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
   SerialUSB.println("Accelerometer Readings");
   SerialUSB.print("a_x: ");
   SerialUSB.println(IMU.accX());
@@ -40,6 +56,6 @@ void IMU_measurements() {
   SerialUSB.println(IMU.gyrY());
   SerialUSB.print("g_z: ");
   SerialUSB.println(IMU.gyrZ());
-  SerialUSB.print("Temperature: ");
+  SerialUSB.print("ICM42688 Temperature: ");
   SerialUSB.println(IMU.temp());
 }

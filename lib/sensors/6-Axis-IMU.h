@@ -5,10 +5,8 @@
 #include "ICM42688.h"
 #include <Arduino.h>
 
-extern SPIClass IMUspi;
-extern ICM42688 IMU;
-
-void IMU_setup();
-void IMU_measurements();
+void setupIMU();
+void measureIMU(double*, double*, double*, double*, double*, double*, double*);
+void printIMU();
 
 #endif

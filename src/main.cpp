@@ -4,6 +4,10 @@
 #include "TFmini_LIDAR.h"
 #include "DPS_barometer.h"
 #include "BNO_orientation.h"
+#include <USBSerial.h>
+#include "co2.h"
+#include "dht22.h"
+#include "6-Axis-IMU.h"
 
 #define LEDPIN1 PB12
 #define LEDPIN2 PC8
@@ -34,7 +38,9 @@ void setup()
   TFminisetup(&maini2c);      // TFmini LIDAR setup
   DPS_setup(&maini2c);        // DPS310 barometer setup
   BNO_setup(&maini2c);        // BNO055 orientation setup
-
+  setupCO2();
+  setupDHT();
+  setupIMU();
 }
 
 void loop()
@@ -44,6 +50,8 @@ void loop()
   BNO_measurements(&pitch, &roll, &heading); // grab BNO readings,
   getTFminidata(&distance);
   pressureCheck(&press);
+  measureDHT();
+  measureIMU();
 
   digitalWrite(LEDPIN1, HIGH);
 
@@ -52,7 +60,11 @@ void loop()
   SerialUSB.println(pitch);
   SerialUSB.println(roll);
   SerialUSB.println(heading);
+  printIMU();
+  printDHT();
+  printCO2();
 
   digitalWrite(LEDPIN2, LOW);
+
   delay(1000);
 }
