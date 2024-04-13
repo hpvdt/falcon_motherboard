@@ -10,14 +10,13 @@ void BNO_setup(TwoWire * bno_bus){
         while (1);
     }
     delay(1000);
-    bno.setExtCrystalUse(true);
 }
 
 void BNO_measurements(float* pitch, float* roll, float* heading){ 
     sensors_event_t orientationData;
-    bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER); // get orientation, euler vectors ok up to 45 degrees
-    *pitch = orientationData.orientation.pitch;
-    *roll = orientationData.orientation.z;
-    *heading = orientationData.orientation.x; // some issues with the .heading, .pitch stuff
+    bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER); 
+    *pitch = orientationData.orientation.z;
+    *roll = orientationData.orientation.y;
+    *heading = orientationData.orientation.x;
 }
 
