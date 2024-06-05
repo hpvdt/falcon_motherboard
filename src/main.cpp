@@ -10,6 +10,7 @@
 #include "6-Axis-IMU.h"
 #include <TinyGPS.h>
 #include "GPS.h"
+#include "onewire.hpp"
 
 #define LEDPIN1 PB12
 #define LEDPIN2 PC8
@@ -17,6 +18,12 @@
 
 const uint32_t SDA1 = PB7;
 const uint32_t SCL1 = PB6;
+
+// OneWire addresses
+const int owAdd = 2;
+const int owAddTest = 0b1010; // Hardcoded address for spar boards.
+const int owTX  = PC3;
+const int owRX  = PC2;
 
 TwoWire maini2c(SDA1, SCL1);
 
@@ -37,6 +44,8 @@ void setup()
   pinMode(LEDPIN2, OUTPUT);
   pinMode(LEDPIN3, OUTPUT);
 
+  int32_t rec;
+
   digitalWrite(LEDPIN3, HIGH);
 
   SerialUSB.begin(115200);
@@ -51,6 +60,8 @@ void setup()
   setupDHT();
   setupIMU();
   GPSSetup();
+  setupOneWire(owRX, owTX, owAdd, false);
+  requestOneWire(owAddTest, &rec);
 }
 
 void loop()
@@ -63,6 +74,8 @@ void loop()
   measureDHT(&DHTtemp, &humidity);
   measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
   getGPSdata(&latitude, &longitude, &speedGPS, &altitudeGPS);
+  int32_t rec = 0;
+  requestOneWire(owAddTest, &rec);
 
   digitalWrite(LEDPIN1, HIGH);
 
