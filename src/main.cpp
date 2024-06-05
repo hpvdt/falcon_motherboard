@@ -8,6 +8,8 @@
 #include "co2.h"
 #include "dht22.h"
 #include "6-Axis-IMU.h"
+#include <TinyGPS.h>
+#include "GPS.h"
 
 #define LEDPIN1 PB12
 #define LEDPIN2 PC8
@@ -23,6 +25,11 @@ float press = 0.0;
 float pitch, roll, heading;
 double humidity, DHTtemp;
 double accX, accY, accZ, gyrX, gyrY, gyrZ, IMUtemp;
+float latitude = 0;         // Latitude (degrees)
+float longitude = 0;        // Longitude (degrees)
+float altitudeGPS = 0;      // Altitude (m)
+float speedGPS = 0;         // GPS speed in km/h
+float distanceGPS = 0;      // GPS distance in km
 
 void setup()
 {
@@ -43,6 +50,7 @@ void setup()
   setupCO2();
   setupDHT();
   setupIMU();
+  GPSSetup();
 }
 
 void loop()
@@ -54,6 +62,7 @@ void loop()
   pressureCheck(&press);
   measureDHT(&DHTtemp, &humidity);
   measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
+  getGPSdata(&latitude, &longitude, &speedGPS, &altitudeGPS);
 
   digitalWrite(LEDPIN1, HIGH);
 
