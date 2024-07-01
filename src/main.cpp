@@ -11,19 +11,20 @@
 #include <TinyGPS.h>
 #include "GPS.h"
 #include "onewire.hpp"
+#include "pc_communications.hpp"
 
-#define LEDPIN1 PB12
-#define LEDPIN2 PC8
-#define LEDPIN3 PC9
+const uint32_t LEDPIN1 = PB12;
+const uint32_t LEDPIN2 = PC8;
+const uint32_t LEDPIN3 = PC9;
 
 const uint32_t SDA1 = PB7;
 const uint32_t SCL1 = PB6;
 
 // OneWire addresses
-const int owAdd = 2;
-const int owAddTest = 0b1010; // Hardcoded address for spar boards.
-const int owTX  = PC3;
-const int owRX  = PC2;
+const uint8_t owAdd = 2;
+const uint8_t owAddTest = 0b1010; // Hardcoded address for spar boards.
+const uint32_t owTX  = PC3;
+const uint32_t owRX  = PC2;
 
 TwoWire maini2c(SDA1, SCL1);
 
@@ -48,10 +49,7 @@ void setup()
 
   digitalWrite(LEDPIN3, HIGH);
 
-  SerialUSB.begin(115200);
-
-  while (!SerialUSB)
-    delay(10);                // Wait for USB connection to be made to the computer before continuing
+  setup_pc_comms(true); // Setup PC communications, blocking until connected
 
   TFminisetup(&maini2c);      // TFmini LIDAR setup
   DPS_setup(&maini2c);        // DPS310 barometer setup
@@ -87,6 +85,8 @@ void loop()
   printIMU();
   printDHT();
   printCO2();
+
+  send_pc_packet();
 
   digitalWrite(LEDPIN2, LOW);
 
