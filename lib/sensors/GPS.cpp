@@ -1,18 +1,15 @@
 #include "TinyGPS.h"
+#include <Arduino.h>
 
-#define CE_PIN PB5
-#define CSN_PIN PB9
-#define LEDPIN1 PB12
-#define LEDPIN2 PC8
-#define LEDPIN3 PC9
-#define GPS_TX PA15
-#define GPS_RX PB3
+const uint32_t GPS_TX = PA15;
+const uint32_t GPS_RX = PB3;
+HardwareSerial gps_serial(GPS_TX, GPS_RX);
 
 TinyGPS gps;
-HardwareSerial gps_serial(GPS_TX,GPS_RX);
+const unsigned long GPS_BAUDRATE = 9600;
 
-void GPSSetup(){
-    gps_serial.begin(9600);
+void GPSSetup() {
+    gps_serial.begin(GPS_BAUDRATE);
 }
 
 void getGPSdata(float *latitude, float *longitude, float *speedGPS, float *altitude){
