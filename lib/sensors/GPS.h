@@ -1,8 +1,6 @@
-
 #ifndef GPS_HEADER
 #define GPS_HEADER
 
-#include "TinyGPS.h"
 #include <Arduino.h>
 
 void GPSSetup();
