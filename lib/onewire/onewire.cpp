@@ -1,6 +1,4 @@
 #include <Arduino.h>
-//#include <avr/io.h>
-//#include <avr/interrupt.h>
 
 #include "onewire.hpp"
 #include "onewireConfig.hpp"
@@ -21,14 +19,6 @@ volatile int32_t oneWirePayloadIn;
 volatile bool oneWireMessageReceived;
 volatile bool oneWireListener;
 
-/**
- * @brief Setups up a one wire interface
- * 
- * @param RX Pin for reading one wire bus
- * @param TX Pin connected to one wire transistor
- * @param address Address for device (default is 0)
- * @param isListener Set to true if device is listener (default is true). If a listener, it will set the handler interrupt routine up.
- */
 void ow_setup(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
 #ifndef ATTINY_CORE
     pinRX = RX;
@@ -57,12 +47,6 @@ ISR(PCINT0_vect) {
 }
 #endif
 
-/**
- * @brief Handles potential requests from the one wire bus
- * 
- * @note Meant to be an interrupt
- * @warning Blocks for the entirety of a transmission to host if responding
- */
 void handleOneWireInput() {
     static unsigned long lastEdge = 0; // Store previous edge timestamp
     unsigned long present = micros();
@@ -135,16 +119,6 @@ void handleOneWireInput() {
     }
 }
 
-/**
- * @brief Requests and receives data from device on the one wire bus
- * 
- * @warning Leaves interrupts enabled once completed
- * 
- * @param targetAdd Address of the unit of interest
- * @param destination Pointer to location to store response from target
- * 
- * @return True if message was received
- */
 bool ow_request(uint8_t targetAdd, int32_t *destination) {
 
     uint8_t attempts = 0;
@@ -176,14 +150,14 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
 }
 
 /**
- * @brief Send data over one wire interface
+ * \brief Send data over one wire interface
  * 
- * @note Shifts data out MSB first. Positive dominant edges are for 1.
+ * \note Shifts data out MSB first. Positive dominant edges are for 1.
  * 
- * @warning Leaves interrupts enabled on completion
+ * \warning Leaves interrupts enabled on completion
  * 
- * @param data Payload to send
- * @param width The width of the data to send in bits
+ * \param data Payload to send
+ * \param width The width of the data to send in bits
  */
 void sendData(uint32_t data, uint8_t width) {
     noInterrupts(); // Don't want interrupts to catch outgoing message
@@ -225,9 +199,9 @@ void sendData(uint32_t data, uint8_t width) {
 }
 
 /**
- * @brief Set the one wire response payload
+ * \brief Set the one wire response payload
  * 
- * @param newPayload What to repsond with next one wire query
+ * \param newPayload What to repsond with next one wire query
  */
 void ow_set_payload(int32_t newPayload) {
     noInterrupts();
