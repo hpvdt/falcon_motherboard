@@ -4,8 +4,8 @@
 
 #include <Arduino.h>
 
-void setupIMU();
-void measureIMU(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU);
-void printIMU();
+void imu_setup();
+void imu_record(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU);
+void imu_print();
 
 #endif

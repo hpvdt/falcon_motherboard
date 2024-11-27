@@ -13,12 +13,12 @@ int16_t tfTemp = 0;       // Internal temperature of Lidar sensor chip
 //  PB6 - I2C_SCK
 //  PB7 - I2C_SDA
 
-void TFminisetup(TwoWire * tfbus) {
+void lidar_setup(TwoWire * tfbus) {
     tfmini.setI2Cbus(tfbus);
     tfbus->begin();              // Initialize two-wire interface  
 }
 
-void getTFminidata(float *distance){
+void lidar_record(float *distance){
     tfmini.getData(tfDist, tfFlux, tfTemp); // Get a frame of data
     if( tfmini.status == TFMP_READY){
         *distance = tfDist;

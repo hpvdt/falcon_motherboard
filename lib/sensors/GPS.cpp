@@ -8,7 +8,7 @@ HardwareSerial gps_serial(GPS_TX, GPS_RX);
 TinyGPS gps;
 const unsigned long GPS_BAUDRATE = 9600;
 
-void setup_gps() {
+void gps_setup() {
     gps_serial.begin(GPS_BAUDRATE);
 }
 

@@ -15,6 +15,13 @@ void setup_pc_comms(bool block) {
     while (!SerialUSB) delay(10); 
 }
 
+void float_by_bytes(float data) {
+    char * dataPointer = (char *) & data;
+
+    //for (int i = 4; i > 0; i--) SerialUSB.write(dataPointer[i-1]); // Most significant byte first
+    for (int i = 0; i < 4; i++) SerialUSB.write(dataPointer[i]); // Least significant byte first
+}
+
 void send_pc_packet () {
     /* the order of data going into the vision system:
   
@@ -51,9 +58,3 @@ void send_pc_packet () {
     float_by_bytes(34.93);
 }
 
-void float_by_bytes(float data) {
-    char * dataPointer = (char *) & data;
-
-    //for (int i = 4; i > 0; i--) SerialUSB.write(dataPointer[i-1]); // Most significant byte first
-    for (int i = 0; i < 4; i++) SerialUSB.write(dataPointer[i]); // Least significant byte first
-}

@@ -24,7 +24,6 @@ TwoWire maini2c(SDA1, SCL1);
 
 // OneWire addresses
 const uint8_t owAdd = 2;
-const uint8_t owAddTest = 0b1010; // Hardcoded address for spar boards.
 const uint32_t owTX  = PC3;
 const uint32_t owRX  = PC2;
 
@@ -42,7 +41,6 @@ float latitude = 0;         // Latitude (degrees)
 float longitude = 0;        // Longitude (degrees)
 float altitudeGPS = 0;      // Altitude (m)
 float speedGPS = 0;         // GPS speed in km/h
-float distanceGPS = 0;      // GPS distance in km
 
 void setup() {
     pinMode(LEDPIN1, OUTPUT);
@@ -55,15 +53,14 @@ void setup() {
 
     setup_pc_comms(true); // Setup PC communications, blocking until connected
 
-    TFminisetup(&maini2c);      // TFmini LIDAR setup
+    lidar_setup(&maini2c);      // TFmini LIDAR setup
     DPS_setup(&maini2c);        // DPS310 barometer setup
-    BNO_setup(&maini2c);        // BNO055 orientation setup
-    setup_co2();
+    bno_setup(&maini2c);        // BNO055 orientation setup
+    co2_setup();
     dht_setup();
-    setupIMU();
-    setup_gps();
+    imu_setup();
+    gps_setup();
     ow_setup(owRX, owTX, owAdd, false);
-    ow_request(owAddTest, &rec);
 
     setupRadios(&spi_bus_1);
 }
@@ -72,23 +69,19 @@ void loop()
 {
     digitalWrite(LEDPIN2, HIGH);
     
-    BNO_measurements(&pitch, &roll, &heading); // grab BNO readings,
-    getTFminidata(&distance);
-    pressureCheck(&press);
+    bno_record(&pitch, &roll, &heading);
+    lidar_record(&distance);
+    pressure_record(&press);
     dht_record(&DHTtemp, &humidity);
-    measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
+    imu_record(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
     gps_get_data(&latitude, &longitude, &speedGPS, &altitudeGPS);
-    int32_t rec = 0;
-    ow_request(owAddTest, &rec);
-
-    digitalWrite(LEDPIN1, HIGH);
 
     SerialUSB.println(press);
     SerialUSB.println(distance);
     SerialUSB.println(pitch);
     SerialUSB.println(roll);
     SerialUSB.println(heading);
-    printIMU();
+    imu_print();
     dht_print();
     co2_print();
 

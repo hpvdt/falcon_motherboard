@@ -20,7 +20,7 @@ void DPS_setup(TwoWire * dpsbus) {
     dps.configureTemperature(DPS310_64HZ, DPS310_64SAMPLES);
 }
 
-void pressureCheck(float *press) {
+void pressure_record(float *press) {
     sensors_event_t temp_event, pressure_event;
     if (dps.pressureAvailable()){
         dps_pressure->getEvent(&pressure_event);

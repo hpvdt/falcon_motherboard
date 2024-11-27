@@ -8,7 +8,7 @@
 
 #include <Wire.h>
 
-void BNO_measurements(float* pitch, float* roll, float* heading); 
-void BNO_setup(TwoWire* bno_bus); 
+void bno_record(float* pitch, float* roll, float* heading); 
+void bno_setup(TwoWire* bno_bus); 
 
 #endif

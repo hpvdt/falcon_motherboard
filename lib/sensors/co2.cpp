@@ -1,11 +1,9 @@
-// Code lifted from Savo Bajic's work on Titan;
-// source: https://github.com/hpvdt/titan_2022/blob/main/Microcontroller%20Code/titan/lib/sensors/co2.cpp
-
+#include <Arduino.h>
 #include "co2.h"
 
 volatile int co2_ppm = 0; 
 
-const byte CO2_PIN = PB0;    // CO2 pin on aircraft is PB0
+const byte CO2_PIN = PB0;   // CO2 pin on aircraft is PB0
 const int CO2_SPAN = 5000;  // Span in ppm of CO2 of sensor
 
 void co2_change() {
@@ -37,14 +35,19 @@ void co2_change() {
     }
 }
 
-void setup_co2() {
+void co2_setup() {
     pinMode(CO2_PIN, INPUT);
 
     attachInterrupt(CO2_PIN, co2_change, CHANGE);
 }
 
+void co2_record(int* ppm) {
+    *ppm = co2_ppm;
+}
+
 void co2_print() {
     SerialUSB.println("CO2 Sensor Readings: ~~~~~~~~~~~~~~~~~~~~~~");
-    SerialUSB.print("CO2 PPM: ");
-    SerialUSB.println(co2_ppm);
+    int temp;
+    co2_record(&temp);
+    SerialUSB.printf("CO2 ppm: %d", temp);
 }

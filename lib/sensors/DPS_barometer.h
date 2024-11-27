@@ -8,7 +8,7 @@
 #include <Wire.h>
 
 //void measurements();//altitude measures
-void pressureCheck(float *press);
+void pressure_record(float *press);
 void DPS_setup(TwoWire * dpsbus);
 
 extern byte pressure;

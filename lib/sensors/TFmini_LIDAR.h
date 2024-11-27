@@ -6,9 +6,9 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-void TFminisetup(TwoWire* tfbus);
+void lidar_setup(TwoWire* tfbus);
 
-void getTFminidata(float *distance);
+void lidar_record(float *distance);
 
 
 #endif
