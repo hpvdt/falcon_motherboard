@@ -1,12 +1,13 @@
 #include "6-Axis-IMU.h"
 #include "ICM42688.h"
 
+const uint8_t IMU_CS = PB10;
+
 SPIClass IMUspi(PB15, PB14, PB13);  // Initialize specific SPI bus.
-ICM42688 IMU(IMUspi, PB10);         // initializes an ICM chip object, specifying
+ICM42688 IMU(IMUspi, IMU_CS);       // initializes an ICM chip object, specifying
                                     // protocol + pin select for serial communication
                                     // defaults to 8MHz clock, but a third parameter can be
                                     // passed to specify up to 24 MHz.
-                                    // PB10 is chip select pin.
 
 void imu_setup() {
     // start communication with IMU
@@ -22,7 +23,7 @@ void imu_setup() {
 }
 
 
-void imu_record(double* accX, double* accY, double* accZ, double* gyrX, double* gyrY, double* gyrZ, double* tempIMU) {
+void imu_record(float* accX, float* accY, float* accZ, float* gyrX, float* gyrY, float* gyrZ, float* tempIMU) {
 
     IMU.getAGT(); // grab newest readings for accel. and gyro.
     

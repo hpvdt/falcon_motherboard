@@ -9,18 +9,18 @@ const byte DHT_PIN = PB1;
 static const uint8_t DHT_TYPE = DHT22;
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
-uint32_t delayMS_DHT;
-double lastDHT;  // is the value of lastDHT preserved here?
+static uint32_t period_dht_check;
+static uint32_t last_dht_check;  
 
 void dht_setup() {
     dht.begin();
     sensor_t sensor;
-    delayMS_DHT = sensor.min_delay / 1000;
+    period_dht_check = sensor.min_delay / 1000;
 }
 
-void dht_record(double* humidity, double* temperature) {
+void dht_record(float* humidity, float* temperature) {
 
-    if (millis() < lastDHT + delayMS_DHT) return;
+    if (millis() < last_dht_check + period_dht_check) return;
         // Get temperature event and print its value.
     sensors_event_t event;
     dht.temperature().getEvent(&event);
@@ -48,7 +48,7 @@ void dht_record(double* humidity, double* temperature) {
         */
         *humidity = event.relative_humidity;
     }
-    lastDHT = millis();
+    last_dht_check = millis();
 }
 
 void dht_print() {
