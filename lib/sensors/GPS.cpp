@@ -8,11 +8,11 @@ HardwareSerial gps_serial(GPS_TX, GPS_RX);
 TinyGPS gps;
 const unsigned long GPS_BAUDRATE = 9600;
 
-void GPSSetup() {
+void setup_gps() {
     gps_serial.begin(GPS_BAUDRATE);
 }
 
-void getGPSdata(float *latitude, float *longitude, float *speedGPS, float *altitude) {
+void gps_get_data(float *latitude, float *longitude, float *speedGPS, float *altitude) {
     bool newData = false;
     while (gps_serial.available()) {
         char c = gps_serial.read();

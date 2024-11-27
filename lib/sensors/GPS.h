@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-void GPSSetup();
-void getGPSdata(float *lattitude, float *longitude, float *speedGPS, float *altitude);
+void setup_gps();
+void gps_get_data(float *lattitude, float *longitude, float *speedGPS, float *altitude);
 
 #endif

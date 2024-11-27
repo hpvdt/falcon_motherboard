@@ -4,7 +4,6 @@
 #define LIDAR_HEADER
 
 #include <Arduino.h>
-#include "TFMPI2C.h"
 #include <Wire.h>
 
 void TFminisetup(TwoWire* tfbus);

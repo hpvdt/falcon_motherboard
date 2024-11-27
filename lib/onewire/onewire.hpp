@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-void setupOneWire(uint8_t RX, uint8_t TX, uint8_t address = 0, bool isListener = true);
-bool requestOneWire(uint8_t targetAdd, int32_t *destination);
-void setPayload(int32_t newPayload);
+void ow_setup(uint8_t RX, uint8_t TX, uint8_t address = 0, bool isListener = true);
+bool ow_request(uint8_t targetAdd, int32_t *destination);
+void ow_set_payload(int32_t newPayload);
 
 #endif

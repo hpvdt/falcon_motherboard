@@ -1,6 +1,8 @@
 // Code originally written by George Wang, imported from the Aircraft_Data repository
 
 #include "BNO_orientation.h"
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 100;

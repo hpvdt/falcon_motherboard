@@ -5,7 +5,6 @@
 #define ALTITUDE_HEADER
 
 #include <Arduino.h>
-#include <Adafruit_DPS310.h>//arduino yay
 #include <Wire.h>
 
 //void measurements();//altitude measures

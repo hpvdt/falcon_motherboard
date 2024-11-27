@@ -44,58 +44,57 @@ float altitudeGPS = 0;      // Altitude (m)
 float speedGPS = 0;         // GPS speed in km/h
 float distanceGPS = 0;      // GPS distance in km
 
-void setup()
-{
-  pinMode(LEDPIN1, OUTPUT);
-  pinMode(LEDPIN2, OUTPUT);
-  pinMode(LEDPIN3, OUTPUT);
+void setup() {
+    pinMode(LEDPIN1, OUTPUT);
+    pinMode(LEDPIN2, OUTPUT);
+    pinMode(LEDPIN3, OUTPUT);
 
-  int32_t rec;
+    int32_t rec;
 
-  digitalWrite(LEDPIN3, HIGH);
+    digitalWrite(LEDPIN3, HIGH);
 
-  setup_pc_comms(true); // Setup PC communications, blocking until connected
+    setup_pc_comms(true); // Setup PC communications, blocking until connected
 
-  TFminisetup(&maini2c);      // TFmini LIDAR setup
-  DPS_setup(&maini2c);        // DPS310 barometer setup
-  BNO_setup(&maini2c);        // BNO055 orientation setup
-  setupCO2();
-  setupDHT();
-  setupIMU();
-  GPSSetup();
-  setupOneWire(owRX, owTX, owAdd, false);
-  requestOneWire(owAddTest, &rec);
+    TFminisetup(&maini2c);      // TFmini LIDAR setup
+    DPS_setup(&maini2c);        // DPS310 barometer setup
+    BNO_setup(&maini2c);        // BNO055 orientation setup
+    setup_co2();
+    dht_setup();
+    setupIMU();
+    setup_gps();
+    ow_setup(owRX, owTX, owAdd, false);
+    ow_request(owAddTest, &rec);
 
-  setupRadios(&spi_bus_1);
+    setupRadios(&spi_bus_1);
 }
 
 void loop()
 {
-  digitalWrite(LEDPIN2, HIGH);
-  
-  BNO_measurements(&pitch, &roll, &heading); // grab BNO readings,
-  getTFminidata(&distance);
-  pressureCheck(&press);
-  measureDHT(&DHTtemp, &humidity);
-  measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
-  getGPSdata(&latitude, &longitude, &speedGPS, &altitudeGPS);
-  int32_t rec = 0;
-  requestOneWire(owAddTest, &rec);
+    digitalWrite(LEDPIN2, HIGH);
+    
+    BNO_measurements(&pitch, &roll, &heading); // grab BNO readings,
+    getTFminidata(&distance);
+    pressureCheck(&press);
+    dht_record(&DHTtemp, &humidity);
+    measureIMU(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
+    gps_get_data(&latitude, &longitude, &speedGPS, &altitudeGPS);
+    int32_t rec = 0;
+    ow_request(owAddTest, &rec);
 
-  digitalWrite(LEDPIN1, HIGH);
+    digitalWrite(LEDPIN1, HIGH);
 
-  SerialUSB.println(press);
-  SerialUSB.println(distance);
-  SerialUSB.println(pitch);
-  SerialUSB.println(roll);
-  SerialUSB.println(heading);
-  printIMU();
-  printDHT();
-  printCO2();
+    SerialUSB.println(press);
+    SerialUSB.println(distance);
+    SerialUSB.println(pitch);
+    SerialUSB.println(roll);
+    SerialUSB.println(heading);
+    printIMU();
+    dht_print();
+    co2_print();
 
-  send_pc_packet();
+    send_pc_packet();
 
-  digitalWrite(LEDPIN2, LOW);
+    digitalWrite(LEDPIN2, LOW);
 
-  delay(1000);
+    delay(1000);
 }

@@ -29,7 +29,7 @@ volatile bool oneWireListener;
  * @param address Address for device (default is 0)
  * @param isListener Set to true if device is listener (default is true). If a listener, it will set the handler interrupt routine up.
  */
-void setupOneWire(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
+void ow_setup(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
 #ifndef ATTINY_CORE
     pinRX = RX;
     pinTX = TX;
@@ -53,7 +53,7 @@ void setupOneWire(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
 #ifdef ATTINY_CORE
 // Call the handler in an interrupt service routine
 ISR(PCINT0_vect) {
-  handleOneWireInput();
+    handleOneWireInput();
 }
 #endif
 
@@ -79,11 +79,11 @@ void handleOneWireInput() {
     static uint32_t tempData = 0;
 
     // Too short since last edge, ignore. Probably setting up the next actual edge
-    if (delta < (3 * oneWirePulsePeriod)) return;
+    if (delta < (3 * OW_PULSE_PERIOD)) return;
     else lastEdge = present;
 
     // See if the edge is late (new message or timeout)
-    if (delta > (2 * oneWireBitPeriod)) {
+    if (delta > (2 * OW_BIT_PERIOD)) {
         bitCount = 0;
         ignoreCount = 0;
         tempData = 0;
@@ -103,12 +103,12 @@ void handleOneWireInput() {
     // Process depending on if it's a caller or not
     if (oneWireListener) {
         // If there's an address check for a match
-        if (bitCount == oneWireAddressWidth) {
+        if (bitCount == OW_ADDRESS_WIDTH) {
 
-            if (tempData == oneWireAddress) sendData(oneWirePayloadOut, oneWireDataWidth);
+            if (tempData == oneWireAddress) sendData(oneWirePayloadOut, OW_DATA_WIDTH);
             else {
                 // Ignore the other device's response
-                ignoreCount = oneWireDataWidth;
+                ignoreCount = OW_DATA_WIDTH;
             }
 
             // Reset for next message
@@ -118,12 +118,12 @@ void handleOneWireInput() {
     }
     else {
         // If awaiting a response
-        if (bitCount == oneWireDataWidth) {
+        if (bitCount == OW_DATA_WIDTH) {
             oneWireMessageReceived = true;
 
             // Extend sign by prefixing ones as needed prior to recording it
-            if (tempData & (1L << (oneWireDataWidth - 1))) {
-                oneWirePayloadIn = tempData | (0xFFFFFFFF << (oneWireDataWidth - 1));
+            if (tempData & (1L << (OW_DATA_WIDTH - 1))) {
+                oneWirePayloadIn = tempData | (0xFFFFFFFF << (OW_DATA_WIDTH - 1));
             }
             else oneWirePayloadIn = tempData; 
 
@@ -145,7 +145,7 @@ void handleOneWireInput() {
  * 
  * @return True if message was received
  */
-bool requestOneWire(uint8_t targetAdd, int32_t *destination) {
+bool ow_request(uint8_t targetAdd, int32_t *destination) {
 
     uint8_t attempts = 0;
 
@@ -155,19 +155,19 @@ bool requestOneWire(uint8_t targetAdd, int32_t *destination) {
 
         // Pull line down for a half period to get attention of all devices
         digitalWrite(pinTX, HIGH);
-        delayMicroseconds(oneWirePulsePeriod);
+        delayMicroseconds(OW_PULSE_PERIOD);
 
         // Send out address
-        sendData(targetAdd, oneWireAddressWidth);
+        sendData(targetAdd, OW_ADDRESS_WIDTH);
 
         // Read data in from line
-        unsigned long timeoutMark = micros() + oneWireTimeoutComms;
+        unsigned long timeoutMark = micros() + OW_TIMEOUT;
         while (!oneWireMessageReceived && (micros() < timeoutMark)) {
             //delayMicroseconds(1000);
         }
 
         attempts++;
-    } while (!oneWireMessageReceived && (attempts < oneWireNumAttempts));
+    } while (!oneWireMessageReceived && (attempts < OW_NUMBER_ATTEMPTS));
 
     if (oneWireMessageReceived) *(destination) = oneWirePayloadIn; 
     //else *(destination) = 0;
@@ -202,21 +202,21 @@ void sendData(uint32_t data, uint8_t width) {
         // Probably the ATtiny85
         if (currentBit == true) {
             PORTB = outputHigh;
-            delayMicroseconds(oneWireBitPeriod - oneWirePulsePeriod);
+            delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
             PORTB = outputLow;
-            delayMicroseconds(oneWirePulsePeriod);
+            delayMicroseconds(OW_PULSE_PERIOD);
         }
         else {
             PORTB = outputLow;
-            delayMicroseconds(oneWireBitPeriod - oneWirePulsePeriod);
+            delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
             PORTB = outputHigh;
-            delayMicroseconds(oneWirePulsePeriod);
+            delayMicroseconds(OW_PULSE_PERIOD);
         }
 #else
         digitalWrite(pinTX, currentBit);
-        delayMicroseconds(oneWireBitPeriod - oneWirePulsePeriod);
+        delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
         digitalWrite(pinTX, !currentBit);
-        delayMicroseconds(oneWirePulsePeriod);
+        delayMicroseconds(OW_PULSE_PERIOD);
 #endif
     }
 
@@ -229,7 +229,7 @@ void sendData(uint32_t data, uint8_t width) {
  * 
  * @param newPayload What to repsond with next one wire query
  */
-void setPayload(int32_t newPayload) {
+void ow_set_payload(int32_t newPayload) {
     noInterrupts();
     oneWirePayloadOut = newPayload;
     interrupts();
