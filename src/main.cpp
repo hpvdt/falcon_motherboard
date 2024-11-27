@@ -37,13 +37,7 @@ AircraftState state;
 IMUAxes onboard_imu;
 
 float lidar_distance = 0.0;
-float press = 0.0;
-float pitch, roll, heading;
 float onboard_imu_temperature;
-float latitude = 0;         // Latitude (degrees)
-float longitude = 0;        // Longitude (degrees)
-float altitudeGPS = 0;      // Altitude (m)
-float speedGPS = 0;         // GPS speed in km/h
 
 void setup() {
     pinMode(LEDPIN1, OUTPUT);
