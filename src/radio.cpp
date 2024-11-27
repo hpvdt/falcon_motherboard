@@ -1,4 +1,4 @@
-#include "Radio.hpp"
+#include "radio.hpp"
 #include <Arduino.h>
 #include <SPI.h>
 #include <RF24.h>

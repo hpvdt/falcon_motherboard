@@ -12,7 +12,8 @@
 #include "GPS.h"
 #include "onewire.hpp"
 #include "pc_communications.hpp"
-#include "Radio.hpp"
+#include "radio.hpp"
+#include "aircraft_data.h"
 
 const uint32_t LEDPIN1 = PB12;
 const uint32_t LEDPIN2 = PC8;
@@ -32,11 +33,13 @@ const uint32_t SPI_BUS_MISO = PA6;
 const uint32_t SPI_BUS_MOSI = PA7;
 SPIClass spi_bus_1(SPI_BUS_MOSI, SPI_BUS_MISO, SPI_BUS_SCLK);
 
-float distance = 0.0;
+AircraftState state;
+IMUAxes onboard_imu;
+
+float lidar_distance = 0.0;
 float press = 0.0;
 float pitch, roll, heading;
-double humidity, DHTtemp;
-double accX, accY, accZ, gyrX, gyrY, gyrZ, IMUtemp;
+float onboard_imu_temperature;
 float latitude = 0;         // Latitude (degrees)
 float longitude = 0;        // Longitude (degrees)
 float altitudeGPS = 0;      // Altitude (m)
@@ -65,27 +68,24 @@ void setup() {
     setupRadios(&spi_bus_1);
 }
 
-void loop()
-{
+void loop() {
     digitalWrite(LEDPIN2, HIGH);
     
-    bno_record(&pitch, &roll, &heading);
-    lidar_record(&distance);
-    pressure_record(&press);
-    dht_record(&DHTtemp, &humidity);
-    imu_record(&accX, &accY, &accZ, &gyrX, &gyrY, &gyrZ, &IMUtemp);
-    gps_get_data(&latitude, &longitude, &speedGPS, &altitudeGPS);
+    imu_record(&onboard_imu.lin.x, &onboard_imu.lin.y, &onboard_imu.lin.z, &onboard_imu.rot.x, &onboard_imu.rot.y, &onboard_imu.rot.z, &onboard_imu_temperature);
+    bno_record(&state.orientation.pitch, &state.orientation.roll, &state.orientation.yaw);
+    lidar_record(&lidar_distance);
 
-    SerialUSB.println(press);
-    SerialUSB.println(distance);
-    SerialUSB.println(pitch);
-    SerialUSB.println(roll);
-    SerialUSB.println(heading);
+    pressure_record(&state.environment.pressure);
+    co2_record(&state.environment.co2);
+    dht_record(&state.environment.temperature, &state.environment.humidity);
+
+    gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
+
     imu_print();
     dht_print();
     co2_print();
 
-    send_pc_packet();
+    send_pc_packet_test();
 
     digitalWrite(LEDPIN2, LOW);
 
