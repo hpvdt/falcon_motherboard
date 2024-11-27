@@ -12,6 +12,7 @@
 #include "GPS.h"
 #include "onewire.hpp"
 #include "pc_communications.hpp"
+#include "Radio.hpp"
 
 const uint32_t LEDPIN1 = PB12;
 const uint32_t LEDPIN2 = PC8;
@@ -19,6 +20,7 @@ const uint32_t LEDPIN3 = PC9;
 
 const uint32_t SDA1 = PB7;
 const uint32_t SCL1 = PB6;
+TwoWire maini2c(SDA1, SCL1);
 
 // OneWire addresses
 const uint8_t owAdd = 2;
@@ -26,7 +28,10 @@ const uint8_t owAddTest = 0b1010; // Hardcoded address for spar boards.
 const uint32_t owTX  = PC3;
 const uint32_t owRX  = PC2;
 
-TwoWire maini2c(SDA1, SCL1);
+const uint32_t SPI_BUS_SCLK = PA5;
+const uint32_t SPI_BUS_MISO = PA6;
+const uint32_t SPI_BUS_MOSI = PA7;
+SPIClass spi_bus_1(SPI_BUS_MOSI, SPI_BUS_MISO, SPI_BUS_SCLK);
 
 float distance = 0.0;
 float press = 0.0;
@@ -60,6 +65,8 @@ void setup()
   GPSSetup();
   setupOneWire(owRX, owTX, owAdd, false);
   requestOneWire(owAddTest, &rec);
+
+  setupRadios(&spi_bus_1);
 }
 
 void loop()
