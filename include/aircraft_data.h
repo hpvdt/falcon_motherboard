@@ -65,6 +65,8 @@ typedef struct _AircraftState {
         float y;
         float z;
     } wind;
+
+    AircraftStrain strain;
 } AircraftState;
 
 #endif

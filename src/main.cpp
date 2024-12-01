@@ -11,7 +11,7 @@
 #include <TinyGPS.h>
 #include "GPS.h"
 #include "onewire.hpp"
-#include "pc_communications.hpp"
+#include "communications.hpp"
 #include "radio.hpp"
 #include "aircraft_data.h"
 
@@ -35,7 +35,6 @@ SPIClass spi_bus_1(SPI_BUS_MOSI, SPI_BUS_MISO, SPI_BUS_SCLK);
 
 AircraftState state;
 IMUAxes onboard_imu;
-AircraftStrain strain;
 
 float lidar_distance = 0.0;
 float onboard_imu_temperature;
@@ -91,14 +90,14 @@ void loop() {
 
     gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
 
-    strain_record(&strain);
+    strain_record(&state.strain);
 
     imu_print();
     dht_print();
     co2_print();
 
-    send_pc_packet_test();
-
+    send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
+    
     digitalWrite(LEDPIN2, LOW);
 
     delay(1000);
