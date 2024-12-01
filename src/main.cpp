@@ -35,6 +35,7 @@ SPIClass spi_bus_1(SPI_BUS_MOSI, SPI_BUS_MISO, SPI_BUS_SCLK);
 
 AircraftState state;
 IMUAxes onboard_imu;
+AircraftStrain strain;
 
 float lidar_distance = 0.0;
 float onboard_imu_temperature;
@@ -62,6 +63,21 @@ void setup() {
     setupRadios(&spi_bus_1);
 }
 
+void strain_record(AircraftStrain* target) {
+    ow_request( 1, &target->left_wing_strain[0]);
+    ow_request( 1, &target->left_wing_strain[1]);
+    ow_request( 1, &target->left_wing_strain[2]);
+    ow_request( 1, &target->left_wing_torsion);
+
+    ow_request( 1, &target->right_wing_strain[0]);
+    ow_request( 1, &target->right_wing_strain[1]);
+    ow_request( 1, &target->right_wing_strain[2]);
+    ow_request( 1, &target->right_wing_torsion);
+
+    ow_request( 1, &target->tail_strain);
+    ow_request( 1, &target->tail_torsion);
+}
+
 void loop() {
     digitalWrite(LEDPIN2, HIGH);
     
@@ -74,6 +90,8 @@ void loop() {
     dht_record(&state.environment.temperature, &state.environment.humidity);
 
     gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
+
+    strain_record(&strain);
 
     imu_print();
     dht_print();

@@ -1,6 +1,15 @@
 #ifndef _AIRCRAFT_DATA_STRUCTS_H
 #define _AIRCRAFT_DATA_STRUCTS_H
 
+typedef struct _AircraftStrain {
+    int32_t left_wing_strain[3];
+    int32_t right_wing_strain[3];
+    int32_t tail_strain;
+    int32_t left_wing_torsion;
+    int32_t right_wing_torsion;
+    int32_t tail_torsion;
+} AircraftStrain;
+
 typedef struct _IMUAxes {
     struct {
         float x;
