@@ -31,11 +31,11 @@ void ow_set_payload(int32_t new_payload);
 /**
  * \brief Perform a series of trial exchanges with a device
  * 
- * \param targetAdd Address of the unit of interest
- * \param destination Pointer to location to store response from target
+ * \param address Target address
+ * \param trials Number of trials to aatempt
  * 
- * \return True if message was received
+ * \note Prints a summary over USB
  */
-void ow_set_payload(int32_t newPayload);
+void ow_test_comms(uint8_t address, unsigned int trials);
 
 #endif

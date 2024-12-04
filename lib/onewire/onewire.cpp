@@ -158,3 +158,41 @@ void ow_set_payload(int32_t new_payload) {
     oneWirePayloadOut = new_payload;
     interrupts();
 }
+
+/**
+ * \brief Checks if a test payload is valid or not
+ * 
+ * \return True if the payload was valid
+ */
+bool ow_verify_test_payload(int32_t test) {
+    uint16_t byte0_in    = (test >> 16) & 0xFF;
+    uint16_t byte1_in    = (test >>  8) & 0xFF;
+    uint16_t sum_in      = (test >>  0) & 0xFF;
+
+    uint8_t calculated_sum = byte0_in + byte1_in;
+
+    return (sum_in == calculated_sum);
+}
+
+void ow_test_comms(uint8_t address, unsigned int trials) {
+    static int messages_received = 0;
+    static int messages_requested = 0;
+    static int messages_passed = 0;
+
+    for (int i = 0; i < trials; i++) {
+        int32_t test_data = 0;
+
+        messages_requested++;
+        if (ow_request(address, &test_data) == false) continue;
+        messages_received++;
+
+        if (ow_verify_test_payload(test_data) == true) messages_passed++;
+
+        delayMicroseconds(100);
+    }
+
+    float success_rate = 0;
+    if (messages_passed > 0) success_rate = (float)messages_passed / (float)messages_requested;
+    SerialUSB.printf("OneWire test: \tReq:%5d\tRec:%5d\tPass:%5d\n", messages_requested, 
+        messages_received, messages_passed);
+}
