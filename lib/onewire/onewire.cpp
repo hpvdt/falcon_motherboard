@@ -4,15 +4,9 @@
 #include "onewireConfig.hpp"
 
 void handleOneWireInput(); // Since it is only meant to be used as an interrupt it is locally scoped
-void sendData(uint32_t data, uint8_t width);
+void ow_send_data(uint32_t data, uint8_t width);
 
-#ifdef ATTINY_CORE
-// Hardcode as constants to compile more optimized code
-const uint8_t pinRX = PB3;
-const uint8_t pinTX = PB1;
-#else
 volatile uint8_t pinRX, pinTX;
-#endif
 volatile uint8_t oneWireAddress;
 volatile int32_t oneWirePayloadOut;
 volatile int32_t oneWirePayloadIn;
@@ -20,42 +14,24 @@ volatile bool oneWireMessageReceived;
 volatile bool oneWireListener;
 
 void ow_setup(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
-#ifndef ATTINY_CORE
     pinRX = RX;
     pinTX = TX;
-#endif
+
     pinMode(pinRX, INPUT);
     pinMode(pinTX, OUTPUT);
     digitalWrite(pinTX, LOW);
 
     oneWireAddress = address;
     oneWireListener = isListener;
-#ifdef ATTINY_CORE
-    noInterrupts();         // Disable interrupts during setup
-    PCMSK |= (1 << pinRX);  // Enable interrupt handler (ISR) for our chosen interrupt pin
-    GIMSK |= (1 << PCIE);   // Enable PCINT interrupt in the general interrupt mask
-    interrupts();
-#else
-    attachInterrupt(digitalPinToInterrupt(pinRX), handleOneWireInput, CHANGE);
-#endif
-}
 
-#ifdef ATTINY_CORE
-// Call the handler in an interrupt service routine
-ISR(PCINT0_vect) {
-    handleOneWireInput();
+    attachInterrupt(digitalPinToInterrupt(pinRX), handleOneWireInput, CHANGE);
 }
-#endif
 
 void handleOneWireInput() {
     static unsigned long lastEdge = 0; // Store previous edge timestamp
     unsigned long present = micros();
 
-#ifdef ATTINY_CORE
-    bool reading = PINB & (1 << pinRX);
-#else
     bool reading = digitalRead(pinRX);
-#endif
     unsigned long delta = present - lastEdge;
 
     static uint8_t bitCount = 0;
@@ -89,7 +65,7 @@ void handleOneWireInput() {
         // If there's an address check for a match
         if (bitCount == OW_ADDRESS_WIDTH) {
 
-            if (tempData == oneWireAddress) sendData(oneWirePayloadOut, OW_DATA_WIDTH);
+            if (tempData == oneWireAddress) ow_send_data(oneWirePayloadOut, OW_DATA_WIDTH);
             else {
                 // Ignore the other device's response
                 ignoreCount = OW_DATA_WIDTH;
@@ -132,7 +108,7 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
         delayMicroseconds(OW_PULSE_PERIOD);
 
         // Send out address
-        sendData(targetAdd, OW_ADDRESS_WIDTH);
+        ow_send_data(targetAdd, OW_ADDRESS_WIDTH);
 
         // Read data in from line
         unsigned long timeoutMark = micros() + OW_TIMEOUT;
@@ -159,52 +135,26 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
  * \param data Payload to send
  * \param width The width of the data to send in bits
  */
-void sendData(uint32_t data, uint8_t width) {
+void ow_send_data(uint32_t data, uint8_t width) {
     noInterrupts(); // Don't want interrupts to catch outgoing message
-
-#ifdef ATTINY_CORE
-    // Port values to set TX without changing other pins
-    uint8_t outputLow = PORTB & ~(1 << pinTX);
-    uint8_t outputHigh = PORTB | (1 << pinTX);
-#endif
 
     for (uint8_t i = width; i > 0; i--) {
         uint32_t mask = 1L << (i - 1); // Needs the `1L` otherwise mask will be 16 bits wide
 
         bool currentBit = ((mask & data) != 0);
-#ifdef ATTINY_CORE
-        // Probably the ATtiny85
-        if (currentBit == true) {
-            PORTB = outputHigh;
-            delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
-            PORTB = outputLow;
-            delayMicroseconds(OW_PULSE_PERIOD);
-        }
-        else {
-            PORTB = outputLow;
-            delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
-            PORTB = outputHigh;
-            delayMicroseconds(OW_PULSE_PERIOD);
-        }
-#else
+
         digitalWrite(pinTX, currentBit);
         delayMicroseconds(OW_BIT_PERIOD - OW_PULSE_PERIOD);
         digitalWrite(pinTX, !currentBit);
         delayMicroseconds(OW_PULSE_PERIOD);
-#endif
     }
 
     digitalWrite(pinTX, LOW); // Release line
     interrupts();
 }
 
-/**
- * \brief Set the one wire response payload
- * 
- * \param newPayload What to repsond with next one wire query
- */
-void ow_set_payload(int32_t newPayload) {
+void ow_set_payload(int32_t new_payload) {
     noInterrupts();
-    oneWirePayloadOut = newPayload;
+    oneWirePayloadOut = new_payload;
     interrupts();
 }

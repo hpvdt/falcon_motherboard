@@ -22,9 +22,14 @@ void ow_setup(uint8_t RX, uint8_t TX, uint8_t address = 0, bool isListener = tru
 bool ow_request(uint8_t targetAdd, int32_t *destination);
 
 /**
- * \brief Requests and receives data from device on the one wire bus
+ * \brief Set the one wire response payload
  * 
- * \warning Leaves interrupts enabled once completed
+ * \param new_payload What to repsond with next one wire query
+ */
+void ow_set_payload(int32_t new_payload);
+
+/**
+ * \brief Perform a series of trial exchanges with a device
  * 
  * \param targetAdd Address of the unit of interest
  * \param destination Pointer to location to store response from target
