@@ -105,9 +105,9 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
         noInterrupts(); // Don't want it catching it's own messages
         oneWireMessageReceived = false; // Clear received flag
 
-        // Pull line down for a half period to get attention of all devices
+        // Pull line down for to get attention of all devices
         digitalWrite(pinTX, HIGH);
-        delayMicroseconds(OW_PULSE_PERIOD);
+        delayMicroseconds(OW_PULSE_PERIOD / 2);
 
         // Send out address
         ow_send_data(targetAdd, OW_ADDRESS_WIDTH);
@@ -166,29 +166,36 @@ bool ow_verify_test_payload(int32_t test) {
     return (sum_in == calculated_sum);
 }
 
-void ow_test_comms(uint8_t address, unsigned int trials) {
-    static int messages_received = 0;
-    static int messages_requested = 0;
-    static int messages_passed = 0;
+void ow_test_comms(uint8_t start_addr, uint8_t end_address, unsigned int trials) {
+    int32_t discard;
 
-    ow_send_data(OW_ADDR_TEST_ENABLE, OW_ADDRESS_WIDTH);
+    ow_request(OW_ADDR_TEST_ENABLE, &discard);
+    delay(10);
 
-    for (int i = 0; i < trials; i++) {
-        int32_t test_data = 0;
+    SerialUSB.printf("OneWire scanning test. %d requests each for nodes %d to %d.\n", trials, start_addr, end_address);
 
-        messages_requested++;
-        if (ow_request(address, &test_data) == false) continue;
-        messages_received++;
+    for (uint8_t node = start_addr; node <= end_address; node++) {
+        int messages_received = 0;
+        int messages_requested = 0;
+        int messages_passed = 0;
 
-        if (ow_verify_test_payload(test_data) == true) messages_passed++;
+        for (int i = 0; i < trials; i++) {
+            int32_t test_data = 0;
 
-        delayMicroseconds(100);
+            messages_requested++;
+            if (ow_request(node, &test_data) == false) continue;
+            messages_received++;
+
+            if (ow_verify_test_payload(test_data) == true) messages_passed++;
+
+            delayMicroseconds(100);
+        }
+
+        float success_rate = 0;
+        if (messages_passed > 0) success_rate = (float)messages_passed / (float)messages_requested;
+        SerialUSB.printf("\tNode %2d | RQ:%4d RX:%4d PASS:%4d\n", node, messages_requested, 
+            messages_received, messages_passed);
     }
 
-    ow_send_data(OW_ADDR_TEST_DISABLE, OW_ADDRESS_WIDTH);
-
-    float success_rate = 0;
-    if (messages_passed > 0) success_rate = (float)messages_passed / (float)messages_requested;
-    SerialUSB.printf("OneWire test: \tReq:%5d\tRec:%5d\tPass:%5d\n", messages_requested, 
-        messages_received, messages_passed);
+    ow_request(OW_ADDR_TEST_DISABLE, &discard);
 }

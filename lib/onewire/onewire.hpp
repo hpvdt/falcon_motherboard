@@ -29,24 +29,26 @@ bool ow_request(uint8_t targetAdd, int32_t *destination);
 void ow_set_payload(int32_t new_payload);
 
 /**
- * \brief Perform a series of trial exchanges with a device
+ * \brief Perform a series of trial exchanges with a range of one wire nodes
  * 
  * \param address Target address
- * \param trials Number of trials to aatempt
+ * \param trials Number of trials to attempt
+ * \param start_addr Start address of scan
+ * \param end_addr End address of scan
  * 
  * \note Prints a summary over USB
  */
-void ow_test_comms(uint8_t address, unsigned int trials);
+void ow_test_comms(uint8_t start_addr, uint8_t end_addr, unsigned int trials);
 
 /**
  * \brief Send data over one wire interface
  * 
+ * \param data Payload to send
+ * \param width The width of the data to send in bits
+ * 
  * \note Shifts data out MSB first. Positive dominant edges are for 1.
  * 
  * \warning Leaves interrupts enabled on completion
- * 
- * \param data Payload to send
- * \param width The width of the data to send in bits
  */
 void ow_send_data(uint32_t data, uint8_t width);
 

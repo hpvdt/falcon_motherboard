@@ -90,13 +90,15 @@ void loop() {
 
     gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
 
-    strain_record(&state.strain);
+    // strain_record(&state.strain);
 
-    imu_print();
-    dht_print();
-    co2_print();
+    // imu_print();
+    // dht_print();
+    // co2_print();
 
     // send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
+
+    ow_test_comms(2, 6, 100);
     
     digitalWrite(LEDPIN2, LOW);
 
