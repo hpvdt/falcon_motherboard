@@ -38,4 +38,16 @@ void ow_set_payload(int32_t new_payload);
  */
 void ow_test_comms(uint8_t address, unsigned int trials);
 
+/**
+ * \brief Send data over one wire interface
+ * 
+ * \note Shifts data out MSB first. Positive dominant edges are for 1.
+ * 
+ * \warning Leaves interrupts enabled on completion
+ * 
+ * \param data Payload to send
+ * \param width The width of the data to send in bits
+ */
+void ow_send_data(uint32_t data, uint8_t width);
+
 #endif

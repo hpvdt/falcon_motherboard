@@ -63,18 +63,18 @@ void setup() {
 }
 
 void strain_record(AircraftStrain* target) {
-    ow_request( 1, &target->left_wing_strain[0]);
-    ow_request( 1, &target->left_wing_strain[1]);
-    ow_request( 1, &target->left_wing_strain[2]);
-    ow_request( 1, &target->left_wing_torsion);
+    ow_request( 4, &target->left_wing_strain[0]);
+    ow_request( 4, &target->left_wing_strain[1]);
+    ow_request( 4, &target->left_wing_strain[2]);
+    ow_request( 4, &target->left_wing_torsion);
 
-    ow_request( 1, &target->right_wing_strain[0]);
-    ow_request( 1, &target->right_wing_strain[1]);
-    ow_request( 1, &target->right_wing_strain[2]);
-    ow_request( 1, &target->right_wing_torsion);
+    ow_request( 4, &target->right_wing_strain[0]);
+    ow_request( 4, &target->right_wing_strain[1]);
+    ow_request( 4, &target->right_wing_strain[2]);
+    ow_request( 4, &target->right_wing_torsion);
 
-    ow_request( 1, &target->tail_strain);
-    ow_request( 1, &target->tail_torsion);
+    ow_request( 5, &target->tail_strain);
+    ow_request( 5, &target->tail_torsion);
 }
 
 void loop() {
@@ -96,7 +96,7 @@ void loop() {
     dht_print();
     co2_print();
 
-    send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
+    // send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
     
     digitalWrite(LEDPIN2, LOW);
 

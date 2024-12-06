@@ -3,7 +3,7 @@
 #include "onewire.hpp"
 #include "onewireConfig.hpp"
 
-void handleOneWireInput(); // Since it is only meant to be used as an interrupt it is locally scoped
+void ow_handle_input(); // Since it is only meant to be used as an interrupt it is locally scoped
 void ow_send_data(uint32_t data, uint8_t width);
 
 volatile uint8_t pinRX, pinTX;
@@ -24,10 +24,12 @@ void ow_setup(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
     oneWireAddress = address;
     oneWireListener = isListener;
 
-    attachInterrupt(digitalPinToInterrupt(pinRX), handleOneWireInput, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(pinRX), ow_handle_input, CHANGE);
+
+    ow_send_data(OW_ADDR_TEST_DISABLE, OW_ADDRESS_WIDTH); // Command all nodes to normal operation
 }
 
-void handleOneWireInput() {
+void ow_handle_input() {
     static unsigned long lastEdge = 0; // Store previous edge timestamp
     unsigned long present = micros();
 
@@ -111,13 +113,13 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
         ow_send_data(targetAdd, OW_ADDRESS_WIDTH);
 
         // Read data in from line
-        unsigned long timeoutMark = micros() + OW_TIMEOUT;
+        unsigned long timeoutMark = micros() + OW_TIMEOUT_COMMS;
         while (!oneWireMessageReceived && (micros() < timeoutMark)) {
             //delayMicroseconds(1000);
         }
 
         attempts++;
-    } while (!oneWireMessageReceived && (attempts < OW_NUMBER_ATTEMPTS));
+    } while (!oneWireMessageReceived && (attempts < OW_NUM_ATTEMPTS));
 
     if (oneWireMessageReceived) *(destination) = oneWirePayloadIn; 
     //else *(destination) = 0;
@@ -125,16 +127,6 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
     return oneWireMessageReceived;
 }
 
-/**
- * \brief Send data over one wire interface
- * 
- * \note Shifts data out MSB first. Positive dominant edges are for 1.
- * 
- * \warning Leaves interrupts enabled on completion
- * 
- * \param data Payload to send
- * \param width The width of the data to send in bits
- */
 void ow_send_data(uint32_t data, uint8_t width) {
     noInterrupts(); // Don't want interrupts to catch outgoing message
 
@@ -179,6 +171,8 @@ void ow_test_comms(uint8_t address, unsigned int trials) {
     static int messages_requested = 0;
     static int messages_passed = 0;
 
+    ow_send_data(OW_ADDR_TEST_ENABLE, OW_ADDRESS_WIDTH);
+
     for (int i = 0; i < trials; i++) {
         int32_t test_data = 0;
 
@@ -190,6 +184,8 @@ void ow_test_comms(uint8_t address, unsigned int trials) {
 
         delayMicroseconds(100);
     }
+
+    ow_send_data(OW_ADDR_TEST_DISABLE, OW_ADDRESS_WIDTH);
 
     float success_rate = 0;
     if (messages_passed > 0) success_rate = (float)messages_passed / (float)messages_requested;
