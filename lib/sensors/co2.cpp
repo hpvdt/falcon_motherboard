@@ -46,8 +46,7 @@ void co2_record(int* ppm) {
 }
 
 void co2_print() {
-    SerialUSB.println("CO2 Sensor Readings: ~~~~~~~~~~~~~~~~~~~~~~");
     int temp;
     co2_record(&temp);
-    SerialUSB.printf("CO2 ppm: %d", temp);
+    SerialUSB.printf("CO2 Sensor Readings ~~~~~~~~~~~~~~~~~~~~~~\nCO2 ppm: %d\n", temp);
 }
