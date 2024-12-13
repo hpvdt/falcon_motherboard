@@ -98,7 +98,7 @@ void loop() {
 
     // send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
 
-    ow_test_comms(2, 6, 100);
+    ow_test_comms(2, 15, 20);
     
     digitalWrite(LEDPIN2, LOW);
 

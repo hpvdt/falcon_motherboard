@@ -26,7 +26,9 @@ void ow_setup(uint8_t RX, uint8_t TX, uint8_t address, bool isListener) {
 
     attachInterrupt(digitalPinToInterrupt(pinRX), ow_handle_input, CHANGE);
 
-    ow_send_data(OW_ADDR_TEST_DISABLE, OW_ADDRESS_WIDTH); // Command all nodes to normal operation
+    // Command into normal mode
+    int32_t discard;
+    ow_request(OW_ADDR_TEST_DISABLE, &discard);
 }
 
 void ow_handle_input() {
@@ -42,7 +44,7 @@ void ow_handle_input() {
 
     // Too short since last edge, ignore. Probably setting up the next actual edge
     if (delta < (3 * OW_PULSE_PERIOD)) return;
-    else lastEdge = present;
+    lastEdge = present;
 
     // See if the edge is late (new message or timeout)
     if (delta > (2 * OW_BIT_PERIOD)) {
@@ -172,15 +174,13 @@ bool ow_verify_test_payload(int32_t test, uint8_t address) {
 void ow_test_comms(uint8_t start_addr, uint8_t end_address, unsigned int trials) {
     int32_t discard;
 
-    ow_request(OW_ADDR_TEST_ENABLE, &discard);
-    delay(10);
-
     SerialUSB.printf("OneWire scanning test. %d requests each for nodes %d to %d.\n", trials, start_addr, end_address);
 
     for (uint8_t node = start_addr; node <= end_address; node++) {
         int messages_received = 0;
         int messages_requested = 0;
         int messages_passed = 0;
+        ow_request(OW_ADDR_TEST_ENABLE, &discard);
 
         for (int i = 0; i < trials; i++) {
             int32_t test_data = 0;
