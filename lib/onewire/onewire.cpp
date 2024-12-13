@@ -154,14 +154,17 @@ void ow_set_payload(int32_t new_payload) {
 /**
  * \brief Checks if a test payload is valid or not
  * 
+ * \param test Returned test payload
+ * \param address Address of expected responder
+ * 
  * \return True if the payload was valid
  */
-bool ow_verify_test_payload(int32_t test) {
+bool ow_verify_test_payload(int32_t test, uint8_t address) {
     uint16_t byte0_in    = (test >> 16) & 0xFF;
     uint16_t byte1_in    = (test >>  8) & 0xFF;
     uint16_t sum_in      = (test >>  0) & 0xFF;
 
-    uint8_t calculated_sum = byte0_in + byte1_in;
+    uint8_t calculated_sum = byte0_in + byte1_in + address;
 
     return (sum_in == calculated_sum);
 }
@@ -186,7 +189,7 @@ void ow_test_comms(uint8_t start_addr, uint8_t end_address, unsigned int trials)
             if (ow_request(node, &test_data) == false) continue;
             messages_received++;
 
-            if (ow_verify_test_payload(test_data) == true) messages_passed++;
+            if (ow_verify_test_payload(test_data, node) == true) messages_passed++;
 
             delayMicroseconds(100);
         }
