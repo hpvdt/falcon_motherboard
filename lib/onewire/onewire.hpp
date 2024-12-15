@@ -3,6 +3,13 @@
 
 #include <Arduino.h>
 
+enum OWReceiveStatus {
+    OW_RX_OK = 0,       // Received message fine
+    OW_RX_TIMEOUT,      // Failed to ping node 
+    OW_RX_BAD_CHECKSUM, // Checksum check failed
+    OW_RX_WRONG_NODE,   // Wrong node responded
+};
+
 /**
  * \brief Setups up a one wire interface
  * 
@@ -16,10 +23,12 @@ void ow_setup(uint8_t RX, uint8_t TX, uint8_t address = 0, bool isListener = tru
 /**
  * \brief Handles potential requests from the one wire bus
  * 
- * \note Meant to be an interrupt
+ * \note Meant to be an interrupt. Only records data if receive was successful
  * \warning Blocks for the entirety of a transmission to host if responding
+ * 
+ * \return Status of the received data
  */
-bool ow_request(uint8_t targetAdd, int32_t *destination);
+OWReceiveStatus ow_request(uint8_t targetAdd, int32_t *destination);
 
 /**
  * \brief Set the one wire response payload

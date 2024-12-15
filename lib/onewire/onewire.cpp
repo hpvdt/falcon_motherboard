@@ -6,6 +6,16 @@
 void ow_handle_input(); // Since it is only meant to be used as an interrupt it is locally scoped
 void ow_send_data(uint32_t data, uint8_t width);
 
+/**
+ * \brief Check if the message was received correctly
+ * 
+ * \param data Paylod to verify
+ * \param origin_node THe node the message was meant to originate from
+ *
+ * \return True if the message checksum is correctly verified, flase on failure to verify 
+ */
+bool ow_verify_checksum(int32_t data, uint_fast8_t origin_node);
+
 volatile uint8_t pinRX, pinTX;
 volatile uint8_t oneWireAddress;
 volatile int32_t oneWirePayloadOut;
@@ -99,8 +109,7 @@ void ow_handle_input() {
     }
 }
 
-bool ow_request(uint8_t targetAdd, int32_t *destination) {
-
+OWReceiveStatus ow_request(uint8_t targetAdd, int32_t *destination) {
     uint8_t attempts = 0;
 
     do {
@@ -123,10 +132,13 @@ bool ow_request(uint8_t targetAdd, int32_t *destination) {
         attempts++;
     } while (!oneWireMessageReceived && (attempts < OW_NUM_ATTEMPTS));
 
-    if (oneWireMessageReceived) *(destination) = oneWirePayloadIn; 
-    //else *(destination) = 0;
+    if (oneWireMessageReceived == false) return OW_RX_TIMEOUT;
 
-    return oneWireMessageReceived;
+    if (ow_verify_checksum(oneWirePayloadIn, targetAdd) == false) return OW_RX_BAD_CHECKSUM;
+
+    *(destination) = oneWirePayloadIn;
+
+    return OW_RX_OK;
 }
 
 void ow_send_data(uint32_t data, uint8_t width) {
@@ -159,16 +171,12 @@ void ow_set_payload(int32_t new_payload) {
  * \param test Returned test payload
  * \param address Address of expected responder
  * 
- * \return True if the payload was valid
+ * \return True if the payload was valid and from expected source
  */
 bool ow_verify_test_payload(int32_t test, uint8_t address) {
-    uint16_t byte0_in    = (test >> 16) & 0xFF;
-    uint16_t byte1_in    = (test >>  8) & 0xFF;
-    uint16_t sum_in      = (test >>  0) & 0xFF;
+    uint8_t received_address = (test >> 24) & 0xFF;
 
-    uint8_t calculated_sum = byte0_in + byte1_in + address;
-
-    return (sum_in == calculated_sum);
+    return (address = received_address);
 }
 
 void ow_test_comms(uint8_t start_addr, uint8_t end_address, unsigned int trials) {
@@ -177,28 +185,43 @@ void ow_test_comms(uint8_t start_addr, uint8_t end_address, unsigned int trials)
     SerialUSB.printf("OneWire scanning test. %d requests each for nodes %d to %d.\n", trials, start_addr, end_address);
 
     for (uint8_t node = start_addr; node <= end_address; node++) {
-        int messages_received = 0;
         int messages_requested = 0;
+        int responses_received = 0;
+        int checksums_failed = 0;
+        int wrong_nodes = 0;
         int messages_passed = 0;
         ow_request(OW_ADDR_TEST_ENABLE, &discard);
 
         for (int i = 0; i < trials; i++) {
             int32_t test_data = 0;
 
+            OWReceiveStatus status = ow_request(node, &test_data);
             messages_requested++;
-            if (ow_request(node, &test_data) == false) continue;
-            messages_received++;
+
+            if (status != OW_RX_TIMEOUT) responses_received++;
+            if (status == OW_RX_BAD_CHECKSUM) checksums_failed++;
+            if (status != OW_RX_OK) continue;
 
             if (ow_verify_test_payload(test_data, node) == true) messages_passed++;
+            else wrong_nodes++;
 
             delayMicroseconds(100);
         }
 
-        float success_rate = 0;
-        if (messages_passed > 0) success_rate = (float)messages_passed / (float)messages_requested;
-        SerialUSB.printf("\tNode %2d | RQ:%4d RX:%4d PASS:%4d\n", node, messages_requested, 
-            messages_received, messages_passed);
+        SerialUSB.printf("\tNode %2d | RQ:%4d RX:%4d PASS:%4d | FCS:%4d FADD:%4d\n", node, messages_requested, 
+            responses_received, messages_passed, checksums_failed, wrong_nodes);
     }
 
     ow_request(OW_ADDR_TEST_DISABLE, &discard);
+}
+
+bool ow_verify_checksum(int32_t data, uint_fast8_t origin_node) {
+    uint8_t calculated_checksum = origin_node;
+    calculated_checksum += data & 0xFF;
+    calculated_checksum += (data >> 8) & 0xFF;
+    calculated_checksum += (data >> 16) & 0xFF;
+
+    uint8_t received_checksum = (data >> 24) & 0xFF;
+
+    return received_checksum == calculated_checksum;
 }
