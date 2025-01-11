@@ -129,7 +129,7 @@ size_t pack_pretty_strain_message(AircraftStrain* data, uint8_t* buffer) {
     location += sprintf(&buf[location], "%d,", data->right_wing_strain[1]);
     location += sprintf(&buf[location], "%d,", data->right_wing_strain[2]);
 
-    location += sprintf(&buf[location], "%d/n", data->torsion[0]);
+    location += sprintf(&buf[location], "%d\n", data->torsion[0]);
 
     return location;
 }
@@ -191,7 +191,7 @@ int send_test_mesage(MessageType msg_type, CommunicationChannel chn) {
     test.gps.latitude       = (random(35999)-18000)/1000.0;
     test.gps.longitude      = (random(35999)-18000)/1000.0;
     test.gps.speed          = 25.3;
-    test.gps.altitude      = 60.3;  
+    test.gps.altitude       = 60.3;  
 
     test.power.shaft        = 567.32;
     test.power.propellor    = 555.50;
@@ -204,6 +204,9 @@ int send_test_mesage(MessageType msg_type, CommunicationChannel chn) {
     test.wind.x             = 2.7;
     test.wind.y             = -6.8;
     test.wind.z             = 34.93;
+
+    test.strain.center_wing_strain = millis();
+    test.strain.torsion[0] = random();
 
     return send_mesage(msg_type, chn, &test);
 }
