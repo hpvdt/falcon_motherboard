@@ -70,10 +70,8 @@ size_t pack_strain_message(AircraftStrain* data, uint8_t* buffer) {
     location = append_24_bits(data->right_wing_strain[0], buffer, location);
     location = append_24_bits(data->right_wing_strain[1], buffer, location);
     location = append_24_bits(data->right_wing_strain[2], buffer, location);
-    location = append_24_bits(data->tail_strain         , buffer, location);
-    location = append_24_bits(data->left_wing_torsion   , buffer, location);
-    location = append_24_bits(data->right_wing_torsion  , buffer, location);
-    location = append_24_bits(data->tail_torsion        , buffer, location);
+    location = append_24_bits(data->center_wing_strain  , buffer, location);
+    location = append_24_bits(data->torsion[0]          , buffer, location);
 
     location = append_checksum(buffer, location);
 

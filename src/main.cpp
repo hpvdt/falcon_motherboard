@@ -63,18 +63,19 @@ void setup() {
 }
 
 void strain_record(AircraftStrain* target) {
-    ow_request( 4, &target->left_wing_strain[0]);
-    ow_request( 4, &target->left_wing_strain[1]);
+    // TODO: Check locations to addresses
+
+    ow_request( 2, &target->left_wing_strain[0]);
+    ow_request( 3, &target->left_wing_strain[1]);
     ow_request( 4, &target->left_wing_strain[2]);
-    ow_request( 4, &target->left_wing_torsion);
 
-    ow_request( 4, &target->right_wing_strain[0]);
-    ow_request( 4, &target->right_wing_strain[1]);
-    ow_request( 4, &target->right_wing_strain[2]);
-    ow_request( 4, &target->right_wing_torsion);
+    ow_request( 5, &target->center_wing_strain);
 
-    ow_request( 5, &target->tail_strain);
-    ow_request( 5, &target->tail_torsion);
+    ow_request( 6, &target->right_wing_strain[0]);
+    ow_request( 7, &target->right_wing_strain[1]);
+    ow_request( 8, &target->right_wing_strain[2]);
+
+    ow_request(15, &target->torsion[0]);
 }
 
 void loop() {

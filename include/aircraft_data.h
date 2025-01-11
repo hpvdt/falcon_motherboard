@@ -4,10 +4,8 @@
 typedef struct _AircraftStrain {
     int32_t left_wing_strain[3];
     int32_t right_wing_strain[3];
-    int32_t tail_strain;
-    int32_t left_wing_torsion;
-    int32_t right_wing_torsion;
-    int32_t tail_torsion;
+    int32_t center_wing_strain;
+    int32_t torsion[1];
 } AircraftStrain;
 
 typedef struct _IMUAxes {
