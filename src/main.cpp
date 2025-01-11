@@ -50,13 +50,13 @@ void setup() {
 
     setup_pc_comms(true); // Setup PC communications, blocking until connected
 
-    lidar_setup(&maini2c);      // TFmini LIDAR setup
-    DPS_setup(&maini2c);        // DPS310 barometer setup
-    bno_setup(&maini2c);        // BNO055 orientation setup
-    co2_setup();
-    dht_setup();
-    imu_setup();
-    gps_setup();
+    // lidar_setup(&maini2c);      // TFmini LIDAR setup
+    // DPS_setup(&maini2c);        // DPS310 barometer setup
+    // bno_setup(&maini2c);        // BNO055 orientation setup
+    // co2_setup();
+    // dht_setup();
+    // imu_setup();
+    // gps_setup();
     ow_setup(owRX, owTX, owAdd, false);
 
     setupRadios(&spi_bus_1);
@@ -104,7 +104,8 @@ void loop() {
     // co2_print();
 
     strain_record(&state.strain);
-    send_test_mesage(MESSAGE_TYPE_PRETTY_STRAIN, COMM_CHANNEL_USB);
+    // send_test_mesage(MESSAGE_TYPE_PRETTY_STRAIN, COMM_CHANNEL_USB);
+    send_mesage(MESSAGE_TYPE_PRETTY_STRAIN, COMM_CHANNEL_USB, &state);
     
     digitalWrite(LEDPIN2, LOW);
     delay(50);
