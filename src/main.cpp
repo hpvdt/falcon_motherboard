@@ -60,10 +60,19 @@ void setup() {
     ow_setup(owRX, owTX, owAdd, false);
 
     setupRadios(&spi_bus_1);
+
+    // Do a few self tests
+    for (int i = 0; i < 3; i++) {
+        ow_test_comms(2, 15, 50);
+        delay(5000);
+    }
+
+    digitalWrite(LEDPIN2, HIGH);
 }
 
 void strain_record(AircraftStrain* target) {
     // TODO: Check locations to addresses
+    // For arrays, 0 is the location closest to the fuselage
 
     ow_request( 2, &target->left_wing_strain[0]);
     ow_request( 3, &target->left_wing_strain[1]);
@@ -79,29 +88,27 @@ void strain_record(AircraftStrain* target) {
 }
 
 void loop() {
-    digitalWrite(LEDPIN2, HIGH);
     
-    imu_record(&onboard_imu.lin.x, &onboard_imu.lin.y, &onboard_imu.lin.z, &onboard_imu.rot.x, &onboard_imu.rot.y, &onboard_imu.rot.z, &onboard_imu_temperature);
-    bno_record(&state.orientation.pitch, &state.orientation.roll, &state.orientation.yaw);
-    lidar_record(&lidar_distance);
+    // imu_record(&onboard_imu.lin.x, &onboard_imu.lin.y, &onboard_imu.lin.z, &onboard_imu.rot.x, &onboard_imu.rot.y, &onboard_imu.rot.z, &onboard_imu_temperature);
+    // bno_record(&state.orientation.pitch, &state.orientation.roll, &state.orientation.yaw);
+    // lidar_record(&lidar_distance);
 
-    pressure_record(&state.environment.pressure);
-    co2_record(&state.environment.co2);
-    dht_record(&state.environment.temperature, &state.environment.humidity);
+    // pressure_record(&state.environment.pressure);
+    // co2_record(&state.environment.co2);
+    // dht_record(&state.environment.temperature, &state.environment.humidity);
 
-    gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
-
-    // strain_record(&state.strain);
+    // gps_get_data(&state.gps.latitude, &state.gps.longitude, &state.gps.speed, &state.gps.altitude);
 
     // imu_print();
     // dht_print();
     // co2_print();
 
-    // send_test_mesage(MESSAGE_TYPE_MAIN, COMM_CHANNEL_USB);
-
-    ow_test_comms(2, 15, 20);
+    strain_record(&state.strain);
+    send_test_mesage(MESSAGE_TYPE_PRETTY_STRAIN, COMM_CHANNEL_USB);
     
     digitalWrite(LEDPIN2, LOW);
+    delay(50);
+    digitalWrite(LEDPIN2, HIGH);
 
-    delay(1000);
+    delay(500);
 }

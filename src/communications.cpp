@@ -117,9 +117,26 @@ size_t pack_gps_message(AircraftState* data, uint8_t* buffer) {
     return location;
 }
 
+size_t pack_pretty_strain_message(AircraftStrain* data, uint8_t* buffer) {
+    uint8_t location = 0;
+    char* buf = (char*) buffer;
+
+    location += sprintf(&buf[location], "%d,", data->left_wing_strain[2]);
+    location += sprintf(&buf[location], "%d,", data->left_wing_strain[1]);
+    location += sprintf(&buf[location], "%d,", data->left_wing_strain[0]);
+    location += sprintf(&buf[location], "%d,", data->center_wing_strain);
+    location += sprintf(&buf[location], "%d,", data->right_wing_strain[0]);
+    location += sprintf(&buf[location], "%d,", data->right_wing_strain[1]);
+    location += sprintf(&buf[location], "%d,", data->right_wing_strain[2]);
+
+    location += sprintf(&buf[location], "%d/n", data->torsion[0]);
+
+    return location;
+}
+
 int send_mesage(MessageType msg_type, CommunicationChannel chn, AircraftState* state) {
     int ret_val = 0; // Default to 0 for OK
-    uint8_t buffer[50];
+    uint8_t buffer[500];
     size_t length;
 
     switch (msg_type) {
@@ -131,6 +148,9 @@ int send_mesage(MessageType msg_type, CommunicationChannel chn, AircraftState* s
         break;
     case MESSAGE_TYPE_STRAIN:
         length = pack_strain_message(&state->strain, buffer);
+        break;
+    case MESSAGE_TYPE_PRETTY_STRAIN:
+        length = pack_pretty_strain_message(&state->strain, buffer);
         break;
     
     default:

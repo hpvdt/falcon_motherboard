@@ -3,9 +3,10 @@
 #include "aircraft_data.h"
 
 enum MessageType : uint8_t {
-    MESSAGE_TYPE_MAIN     = 'm',
-    MESSAGE_TYPE_STRAIN   = 's',
-    MESSAGE_TYPE_GPS      = 'g',
+    MESSAGE_TYPE_MAIN           = 'm',
+    MESSAGE_TYPE_STRAIN         = 's',
+    MESSAGE_TYPE_GPS            = 'g',
+    MESSAGE_TYPE_PRETTY_STRAIN  = 'S',
 };
 
 enum CommunicationChannel {
