@@ -1,2 +1,3 @@
-# motherboard
-Firmware for Falcon motherboard
+# Motherboard
+
+Firmware and hardware designs for the Falcon motherboard.
