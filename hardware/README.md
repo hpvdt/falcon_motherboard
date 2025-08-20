@@ -22,6 +22,5 @@ A heavy revision of the previous motherboard, spurred by changes in the architec
 - On boarding of the orientation sensor (BNO055)
 - Removal of the LIDAR header
 - Removal of the obsoleted OneWire header and hardware
-- Addition of EEPROM for storing possible configuration value outside of the main MCU
 - Moving to a new sensor for temperature and humidity
 - Embedding of a power sensor to monitor battery use
