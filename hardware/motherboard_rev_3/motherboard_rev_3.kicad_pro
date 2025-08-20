@@ -69,16 +69,20 @@
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",
         "courtyards_overlap": "error",
+        "creepage": "error",
         "diff_pair_gap_out_of_range": "error",
         "diff_pair_uncoupled_length_too_long": "error",
         "drill_out_of_range": "error",
         "duplicate_footprints": "warning",
         "extra_footprint": "warning",
         "footprint": "error",
+        "footprint_filters_mismatch": "ignore",
         "footprint_symbol_mismatch": "warning",
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "hole_to_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -88,9 +92,11 @@
         "lib_footprint_mismatch": "warning",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
+        "mirrored_text_on_front_layer": "warning",
         "missing_courtyard": "ignore",
         "missing_footprint": "warning",
         "net_conflict": "warning",
+        "nonmirrored_text_on_back_layer": "warning",
         "npth_inside_courtyard": "ignore",
         "padstack": "warning",
         "pth_inside_courtyard": "ignore",
@@ -102,10 +108,13 @@
         "solder_mask_bridge": "ignore",
         "starved_thermal": "error",
         "text_height": "warning",
+        "text_on_edge_cuts": "error",
         "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
+        "track_angle": "error",
         "track_dangling": "warning",
+        "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
         "unconnected_items": "error",
@@ -118,6 +127,7 @@
         "min_clearance": 0.15,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.0,
+        "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
         "min_microvia_diameter": 0.2,
@@ -137,10 +147,11 @@
       },
       "teardrop_options": [
         {
-          "td_onpadsmd": true,
+          "td_onpthpad": true,
           "td_onroundshapesonly": false,
+          "td_onsmdpad": true,
           "td_ontrackend": false,
-          "td_onviapad": true
+          "td_onvia": true
         }
       ],
       "teardrop_parameters": [
@@ -231,7 +242,28 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "multiple_net_names|1841500|1244600|60dc4043-0483-4e09-81e1-b741e7d565e3|cb9e39cc-77fa-4569-8213-16f7f1ccf585|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
+        ""
+      ],
+      [
+        "multiple_net_names|723900|2501900|e9bc6599-a944-4a69-9adb-dd0623e1a679|861202dc-0af2-49f8-8104-4cfca32ce472|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
+        ""
+      ],
+      [
+        "pin_to_pin|1219200|1790700|318d7a00-e58c-4723-8a6c-afb4e9a877db|9c81eb56-67f4-4313-a6d7-ceb36c3f8a28|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
+        ""
+      ],
+      [
+        "pin_to_pin|1358900|2108200|efd9a0b6-44b6-43cd-9530-d636e8616589|7de1078b-8453-459a-ae40-503918d9044a|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
+        ""
+      ],
+      [
+        "pin_to_pin|1905000|2349500|dee34d7d-ea7e-4886-b796-18ddc493521a|65165cdd-1f0d-4ddc-ba32-84ce4cfe2ca1|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
+        ""
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -417,10 +449,15 @@
       "duplicate_sheet_names": "error",
       "endpoint_off_grid": "warning",
       "extra_units": "error",
+      "footprint_filter": "ignore",
+      "footprint_link_issues": "warning",
+      "four_way_junction": "ignore",
       "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
       "label_dangling": "error",
+      "label_multiple_wires": "warning",
       "lib_symbol_issues": "warning",
+      "lib_symbol_mismatch": "warning",
       "missing_bidi_pin": "warning",
       "missing_input_pin": "warning",
       "missing_power_pin": "error",
@@ -433,9 +470,14 @@
       "pin_not_driven": "error",
       "pin_to_pin": "warning",
       "power_pin_not_driven": "error",
+      "same_local_global_label": "warning",
+      "similar_label_and_power": "warning",
       "similar_labels": "warning",
+      "similar_power": "warning",
       "simulation_model_issue": "ignore",
+      "single_global_label": "ignore",
       "unannotated": "error",
+      "unconnected_wire_endpoint": "warning",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",
       "wire_dangling": "error"
@@ -443,7 +485,9 @@
   },
   "libraries": {
     "pinned_footprint_libs": [],
-    "pinned_symbol_libs": []
+    "pinned_symbol_libs": [
+      "mb_sensors"
+    ]
   },
   "meta": {
     "filename": "motherboard_rev_3.kicad_pro",
@@ -493,6 +537,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "${PROJECTNAME}.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -505,7 +550,7 @@
     },
     "bom_presets": [],
     "bom_settings": {
-      "exclude_dnp": false,
+      "exclude_dnp": true,
       "fields_ordered": [
         {
           "group_by": false,
@@ -523,10 +568,10 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -535,13 +580,13 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
           "group_by": true,
           "label": "DNP",
           "name": "${DNP}",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -554,10 +599,17 @@
           "label": "Description",
           "name": "Description",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": true
         }
       ],
       "filter_string": "",
       "group_symbols": true,
+      "include_excluded_from_bom": true,
       "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
@@ -592,6 +644,7 @@
     "net_format_name": "",
     "page_layout_descr_file": "",
     "plot_directory": "",
+    "space_save_all_events": true,
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
     "spice_model_current_sheet_as_root": true,
@@ -605,6 +658,14 @@
     [
       "39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
       "Root"
+    ],
+    [
+      "78f7b167-041e-41f6-8e25-c16c4d32d4b2",
+      "Power"
+    ],
+    [
+      "7b980629-eac8-442c-9575-c3552746993e",
+      "CAN"
     ]
   ],
   "text_variables": {}
