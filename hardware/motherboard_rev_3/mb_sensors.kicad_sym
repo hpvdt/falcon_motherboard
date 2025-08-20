@@ -783,7 +783,7 @@
 					)
 				)
 			)
-			(pin bidirectional line
+			(pin tri_state line
 				(at -10.16 -5.08 0)
 				(length 2.54)
 				(name "INT2"
@@ -801,7 +801,7 @@
 					)
 				)
 			)
-			(pin power_in line
+			(pin free line
 				(at 0 -10.16 90)
 				(length 2.54)
 				(hide yes)
@@ -820,7 +820,7 @@
 					)
 				)
 			)
-			(pin power_in line
+			(pin free line
 				(at 0 -10.16 90)
 				(length 2.54)
 				(hide yes)
@@ -839,7 +839,7 @@
 					)
 				)
 			)
-			(pin power_in line
+			(pin free line
 				(at 0 -10.16 90)
 				(length 2.54)
 				(hide yes)
@@ -858,7 +858,7 @@
 					)
 				)
 			)
-			(pin power_in line
+			(pin free line
 				(at 0 -10.16 90)
 				(length 2.54)
 				(hide yes)
@@ -899,7 +899,7 @@
 				(at 0 -10.16 90)
 				(length 2.54)
 				(hide yes)
-				(name "RESV"
+				(name "GND"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -950,7 +950,7 @@
 					)
 				)
 			)
-			(pin output line
+			(pin tri_state line
 				(at 10.16 -1.27 180)
 				(length 2.54)
 				(name "SDO"
@@ -968,7 +968,7 @@
 					)
 				)
 			)
-			(pin bidirectional line
+			(pin tri_state line
 				(at 10.16 -3.81 180)
 				(length 2.54)
 				(name "SDI"

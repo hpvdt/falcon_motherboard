@@ -244,6 +244,10 @@
   "erc": {
     "erc_exclusions": [
       [
+        "multiple_net_names|1320800|1841500|12b5d2b1-f3a2-4343-8ce0-090cb9883083|86c35377-4c6b-486b-b6f3-0d3ad6b4ab44|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
+        ""
+      ],
+      [
         "multiple_net_names|1841500|1244600|60dc4043-0483-4e09-81e1-b741e7d565e3|cb9e39cc-77fa-4569-8213-16f7f1ccf585|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
         ""
       ],
@@ -605,11 +609,17 @@
           "label": "LCSC",
           "name": "LCSC",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
-      "include_excluded_from_bom": true,
+      "include_excluded_from_bom": false,
       "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
