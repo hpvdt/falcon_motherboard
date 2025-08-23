@@ -6,8 +6,8 @@
 	(paper "USLedger")
 	(title_block
 		(title "Falcon Motherboard")
-		(date "2025-08-20")
-		(rev "3.0")
+		(date "2025-08-23")
+		(rev "3.1")
 		(company "HPVDT")
 		(comment 1 "Revised connections for programming pins")
 		(comment 2 "Revised some sensor choices")
@@ -9934,7 +9934,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "USB_C_Receptacle_USB2.0"
+		(property "Value" "USB4105-GF-A-120"
 			(at 386.08 44.4499 0)
 			(effects
 				(font
@@ -9943,7 +9943,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12"
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal"
 			(at 370.84 43.18 0)
 			(effects
 				(font
@@ -9970,7 +9970,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C165948"
+		(property "LCSC" "C5184243"
 			(at 374.65 43.18 0)
 			(effects
 				(font
@@ -10111,7 +10111,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 127 231.14 0)
 			(effects
 				(font
@@ -11021,7 +11021,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 171.45 39.37 0)
 			(effects
 				(font
@@ -12230,7 +12230,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 133.35 231.14 0)
 			(effects
 				(font
@@ -12515,7 +12515,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 147.32 39.37 0)
 			(effects
 				(font
@@ -12593,7 +12593,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 158.75 39.37 0)
 			(effects
 				(font
@@ -12671,7 +12671,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 44.45 242.57 0)
 			(effects
 				(font
@@ -12750,7 +12750,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 99.06 173.99 0)
 			(effects
 				(font
@@ -12919,7 +12919,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 312.42 184.15 0)
 			(effects
 				(font
@@ -15443,7 +15443,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 92.71 173.99 0)
 			(effects
 				(font
@@ -15521,7 +15521,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 299.72 184.15 0)
 			(effects
 				(font
@@ -16420,48 +16420,6 @@
 				(path "/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff"
 					(reference "C2")
 					(unit 1)
-				)
-			)
-		)
-	)
-	(sheet
-		(at 190.5 180.34)
-		(size 67.31 33.02)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "09b5308d-048c-4a33-a621-b2ab9a99d114")
-		(property "Sheetname" "nRF24 Comms"
-			(at 190.5 179.6284 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "nrf24.kicad_sch"
-			(at 190.5 213.9446 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "motherboard_rev_3"
-				(path "/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff"
-					(page "4")
 				)
 			)
 		)

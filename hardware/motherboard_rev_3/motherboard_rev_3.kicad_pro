@@ -130,8 +130,8 @@
       "rules": {
         "max_error": 0.005,
         "min_clearance": 0.15,
-        "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.0,
+        "min_connection": 0.15,
+        "min_copper_edge_clearance": 0.25,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
@@ -147,7 +147,7 @@
         "min_via_diameter": 0.5,
         "solder_mask_clearance": 0.0,
         "solder_mask_min_width": 0.0,
-        "solder_mask_to_copper_clearance": 0.0,
+        "solder_mask_to_copper_clearance": 0.005,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -235,7 +235,7 @@
           "drill": 0.3
         }
       ],
-      "zones_allow_external_fillets": false
+      "zones_allow_external_fillets": true
     },
     "ipc2581": {
       "dist": "",
@@ -679,10 +679,6 @@
     [
       "7b980629-eac8-442c-9575-c3552746993e",
       "CAN"
-    ],
-    [
-      "09b5308d-048c-4a33-a621-b2ab9a99d114",
-      "nRF24 Comms"
     ]
   ],
   "text_variables": {}

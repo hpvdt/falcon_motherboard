@@ -10,6 +10,7 @@
 		(rev "3.0")
 		(company "Savo Bajic")
 		(comment 1 "Provides 3.3 V and includes a power monitoring IC")
+		(comment 2 "Handles up to 17 V input (limited by convertor IC)")
 	)
 	(lib_symbols
 		(symbol "Connector_Generic:Conn_01x02"
@@ -2421,7 +2422,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 123.19 96.52 0)
 			(effects
 				(font
@@ -2573,7 +2574,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 181.61 88.9 0)
 			(effects
 				(font
@@ -3342,7 +3343,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5448875"
+		(property "LCSC" "C301928"
 			(at 106.68 127 0)
 			(effects
 				(font
