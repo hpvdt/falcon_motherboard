@@ -625,7 +625,7 @@
       "include_excluded_from_bom": false,
       "name": "",
       "sort_asc": true,
-      "sort_field": "Reference"
+      "sort_field": "LCSC"
     },
     "connection_grid_size": 50.0,
     "drawing": {
@@ -679,6 +679,10 @@
     [
       "7b980629-eac8-442c-9575-c3552746993e",
       "CAN"
+    ],
+    [
+      "09b5308d-048c-4a33-a621-b2ab9a99d114",
+      "nRF24 Comms"
     ]
   ],
   "text_variables": {}

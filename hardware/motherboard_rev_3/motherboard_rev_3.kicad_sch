@@ -16425,6 +16425,48 @@
 		)
 	)
 	(sheet
+		(at 190.5 180.34)
+		(size 67.31 33.02)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "09b5308d-048c-4a33-a621-b2ab9a99d114")
+		(property "Sheetname" "nRF24 Comms"
+			(at 190.5 179.6284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "nrf24.kicad_sch"
+			(at 190.5 213.9446 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "motherboard_rev_3"
+				(path "/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 40.64 33.02)
 		(size 25.4 20.32)
 		(exclude_from_sim no)
