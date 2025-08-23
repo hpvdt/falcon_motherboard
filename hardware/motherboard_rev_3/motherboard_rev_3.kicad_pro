@@ -56,6 +56,11 @@
           "gap": 0.0,
           "via_gap": 0.0,
           "width": 0.0
+        },
+        {
+          "gap": 0.15,
+          "via_gap": 0.8,
+          "width": 0.15
         }
       ],
       "drc_exclusions": [],
@@ -190,7 +195,9 @@
         }
       ],
       "track_widths": [
-        0.0
+        0.0,
+        0.15,
+        0.25
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -222,6 +229,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.3
         }
       ],
       "zones_allow_external_fillets": false
@@ -244,15 +255,7 @@
   "erc": {
     "erc_exclusions": [
       [
-        "multiple_net_names|1320800|1841500|12b5d2b1-f3a2-4343-8ce0-090cb9883083|86c35377-4c6b-486b-b6f3-0d3ad6b4ab44|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
-        ""
-      ],
-      [
-        "multiple_net_names|1841500|1244600|60dc4043-0483-4e09-81e1-b741e7d565e3|cb9e39cc-77fa-4569-8213-16f7f1ccf585|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
-        ""
-      ],
-      [
-        "multiple_net_names|723900|2501900|e9bc6599-a944-4a69-9adb-dd0623e1a679|861202dc-0af2-49f8-8104-4cfca32ce472|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
+        "multiple_net_names|1320800|1841500|e9bc6599-a944-4a69-9adb-dd0623e1a679|86c35377-4c6b-486b-b6f3-0d3ad6b4ab44|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
         ""
       ],
       [
@@ -260,11 +263,11 @@
         ""
       ],
       [
-        "pin_to_pin|1358900|2108200|efd9a0b6-44b6-43cd-9530-d636e8616589|7de1078b-8453-459a-ae40-503918d9044a|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
+        "pin_to_pin|1358900|2108200|efd9a0b6-44b6-43cd-9530-d636e8616589|43f265b4-3ab4-434b-8803-2207e8a45682|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
         ""
       ],
       [
-        "pin_to_pin|1905000|2349500|dee34d7d-ea7e-4886-b796-18ddc493521a|65165cdd-1f0d-4ddc-ba32-84ce4cfe2ca1|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
+        "pin_to_pin|2108200|2349500|dee34d7d-ea7e-4886-b796-18ddc493521a|65165cdd-1f0d-4ddc-ba32-84ce4cfe2ca1|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
         ""
       ]
     ],
@@ -512,7 +515,7 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.25,
+        "track_width": 0.15,
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
