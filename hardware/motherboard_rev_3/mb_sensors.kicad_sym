@@ -1238,17 +1238,9 @@
 					(type background)
 				)
 			)
-			(text "MT3339"
-				(at 11.43 -11.43 900)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
 		)
 		(symbol "MT3339_1_1"
-			(pin power_in line
+			(pin power_out line
 				(at 2.54 -1.27 0)
 				(length 2.54)
 				(name "3.3V"
@@ -1284,7 +1276,7 @@
 					)
 				)
 			)
-			(pin power_out line
+			(pin power_in line
 				(at 2.54 -6.35 0)
 				(length 2.54)
 				(name "VBAT"
@@ -1320,7 +1312,7 @@
 					)
 				)
 			)
-			(pin input line
+			(pin output line
 				(at 2.54 -11.43 0)
 				(length 2.54)
 				(name "TX"
@@ -1338,7 +1330,7 @@
 					)
 				)
 			)
-			(pin output line
+			(pin input line
 				(at 2.54 -13.97 0)
 				(length 2.54)
 				(name "RX"
