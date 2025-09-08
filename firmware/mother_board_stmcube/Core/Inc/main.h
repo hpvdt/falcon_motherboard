@@ -65,8 +65,8 @@ void Error_Handler(void);
 #define RADIO_INT_IRQ_GPIO_Port GPIOC
 #define RADIO_EXT_IRQ_Pin GPIO_PIN_15
 #define RADIO_EXT_IRQ_GPIO_Port GPIOC
-#define CO2_Pin GPIO_PIN_0
-#define CO2_GPIO_Port GPIOA
+#define PWM_IN_Pin GPIO_PIN_0
+#define PWM_IN_GPIO_Port GPIOA
 #define RADIO_EXT_CE_Pin GPIO_PIN_1
 #define RADIO_EXT_CE_GPIO_Port GPIOA
 #define GPS_RX_Pin GPIO_PIN_2
@@ -81,8 +81,8 @@ void Error_Handler(void);
 #define RADIO_MISO_GPIO_Port GPIOA
 #define RADIO_MOSI_Pin GPIO_PIN_7
 #define RADIO_MOSI_GPIO_Port GPIOA
-#define LED_HRTBT_Pin GPIO_PIN_0
-#define LED_HRTBT_GPIO_Port GPIOB
+#define LED_HEARTBEAT_Pin GPIO_PIN_0
+#define LED_HEARTBEAT_GPIO_Port GPIOB
 #define RADIO_INT_CS_Pin GPIO_PIN_1
 #define RADIO_INT_CS_GPIO_Port GPIOB
 #define ENC_5_Pin GPIO_PIN_2
