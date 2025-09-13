@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "string.h"
+#include "led_operation.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +59,12 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+TIM_HandleTypeDef* led_err_clk = &htim4;
+uint32_t led_err_chn = TIM_CHANNEL_1;
+TIM_HandleTypeDef* led_ind_clk = &htim4;
+uint32_t led_ind_chn = TIM_CHANNEL_2;
+TIM_HandleTypeDef* led_heartbeat_clk = &htim3;
+uint32_t led_heartbeat_chn = TIM_CHANNEL_3;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,6 +130,16 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+
+  struct LEDMoBoConfig led_config = {
+		  .error_timer = led_err_clk,
+		  .error_channel = led_err_chn,
+		  .indicator_timer = led_ind_clk,
+		  .indicator_channel = led_ind_chn,
+		  .heartbeat_timer = led_heartbeat_clk,
+		  .heartbeat_channel = led_heartbeat_chn,
+  };
+  led_setup(&led_config);
   uint8_t TxBuffer[] = "Hello World! From STM32 USB CDC Device To Virtual COM Port\r\n";
   uint8_t TxBufferLen = sizeof(TxBuffer);
   /* USER CODE END 2 */
@@ -132,11 +148,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      CDC_Transmit_FS(TxBuffer, TxBufferLen);
-      HAL_Delay(500);
+//      CDC_Transmit_FS(TxBuffer, TxBufferLen);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+      led_operate(&led_config);
+      HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }
@@ -503,7 +520,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
@@ -562,7 +579,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
