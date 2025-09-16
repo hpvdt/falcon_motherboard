@@ -22,9 +22,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+#include <stdint.h>
 #include "usbd_cdc_if.h"
 #include "string.h"
 #include "led_operation.h"
+#include "can_wrapper.h"
+#include "wing_modules.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +96,33 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int print_nice_loading(uint8_t* buffer, uint16_t buff_len) {
+	static uint32_t next_print_tick = 0;
+	uint32_t current_tick = HAL_GetTick();
 
+	if (current_tick < next_print_tick) {
+		buffer[0] = '\0'; // Nullify the buffer
+		return 0;
+	}
+
+	const uint32_t PRINT_PERIOD_TICKS = 1000;
+	next_print_tick = current_tick + PRINT_PERIOD_TICKS;
+
+	struct WingLoading load;
+	wing_report_strain(&load);
+
+	snprintf((char*) buffer, buff_len, "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\r\n",
+			load.strain_port[2],
+			load.strain_port[1],
+			load.strain_port[0],
+			load.strain_center,
+			load.strain_starboard[0],
+			load.strain_starboard[1],
+			load.strain_starboard[2],
+			load.torsion
+			);
+	return strnlen((char*) buffer, buff_len);
+}
 /* USER CODE END 0 */
 
 /**
@@ -146,19 +176,33 @@ int main(void)
 		  .heartbeat_channel = led_heartbeat_chn,
   };
   led_setup(&led_config);
-  uint8_t TxBuffer[] = "Hello World! From STM32 USB CDC Device To Virtual COM Port\r\n";
-  uint8_t TxBufferLen = sizeof(TxBuffer);
+
+  wing_setup(&hcan1);
+  uint8_t usb_tx_buffer[500] = {0};
+  uint16_t usb_tx_length = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//      CDC_Transmit_FS(TxBuffer, TxBufferLen);
+	  if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_LOAD_FIFO) > 0) {
+		  CAN_RxHeaderTypeDef rx_header = {0};
+		  uint8_t rx_buffer[8] = {0};
+		  HAL_CAN_GetRxMessage(&hcan1, CAN_LOAD_FIFO, &rx_header, rx_buffer);
+
+		  wing_record_strain(rx_header.StdId, rx_buffer);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
       led_operate(&led_config);
+
+      usb_tx_length = print_nice_loading(usb_tx_buffer, sizeof(usb_tx_buffer));
+      if (usb_tx_length > 0) {
+    	  CDC_Transmit_FS(usb_tx_buffer, usb_tx_length);
+    	  wing_setup(&hcan1);
+      }
       HAL_Delay(10);
   }
   /* USER CODE END 3 */
@@ -234,7 +278,7 @@ static void MX_CAN1_Init(void)
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
