@@ -253,24 +253,7 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [
-      [
-        "multiple_net_names|1320800|1841500|e9bc6599-a944-4a69-9adb-dd0623e1a679|86c35377-4c6b-486b-b6f3-0d3ad6b4ab44|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
-        ""
-      ],
-      [
-        "pin_to_pin|1219200|1790700|318d7a00-e58c-4723-8a6c-afb4e9a877db|9c81eb56-67f4-4313-a6d7-ceb36c3f8a28|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
-        ""
-      ],
-      [
-        "pin_to_pin|1358900|2108200|efd9a0b6-44b6-43cd-9530-d636e8616589|43f265b4-3ab4-434b-8803-2207e8a45682|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff/78f7b167-041e-41f6-8e25-c16c4d32d4b2",
-        ""
-      ],
-      [
-        "pin_to_pin|2108200|2349500|dee34d7d-ea7e-4886-b796-18ddc493521a|65165cdd-1f0d-4ddc-ba32-84ce4cfe2ca1|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff|/39c7ec0f-0a05-4172-b48a-dcc9b63f77ff",
-        ""
-      ]
-    ],
+    "erc_exclusions": [],
     "meta": {
       "version": 0
     },
@@ -485,6 +468,7 @@
       "single_global_label": "ignore",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
+      "undefined_netclass": "error",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",
       "wire_dangling": "error"
