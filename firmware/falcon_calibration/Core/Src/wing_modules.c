@@ -66,15 +66,15 @@ void wing_setup(CAN_HandleTypeDef* can) {
 		node[7].strain.zero_point = 0;
 		node[7].strain.gain = ADS_PGA_GAIN_1;
 
-		node[0].stress_location = WING_LOCATION_STAR_1;
-		node[0].general.measuring_strain = true;
-		node[0].strain.scaling_factor = 1.0;
-		node[0].strain.zero_point = 0;
-		node[0].strain.gain = ADS_PGA_GAIN_1;
-		node[0].general.measuring_torsion = true;
-		node[0].torsion.scaling_factor = 1.0;
-		node[0].torsion.zero_point = 0;
-		node[0].torsion.gain = ADS_PGA_GAIN_1;
+		node[8].stress_location = WING_LOCATION_STAR_1;
+		node[8].general.measuring_strain = true;
+		node[8].strain.scaling_factor = 1.0;
+		node[8].strain.zero_point = 0;
+		node[8].strain.gain = ADS_PGA_GAIN_1;
+		node[8].general.measuring_torsion = true;
+		node[8].torsion.scaling_factor = 1.0;
+		node[8].torsion.zero_point = 0;
+		node[8].torsion.gain = ADS_PGA_GAIN_1;
 
 		node[5].stress_location = WING_LOCATION_STAR_2;
 		node[5].general.measuring_strain = true;
