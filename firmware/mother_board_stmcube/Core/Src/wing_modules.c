@@ -55,45 +55,44 @@ void wing_setup(CAN_HandleTypeDef* can) {
 		node[n].torsion = default_strain_torsion;
 	}
 
-	node[0].stress_location = WING_LOCATION_CENTER;
-	node[0].general.measuring_strain = true;
-	node[0].strain.scaling_factor = 1.0;
-	node[0].strain.zero_point = 0;
+	node[7].stress_location = WING_LOCATION_CENTER;
+	node[7].general.measuring_strain = true;
+	node[7].strain.scaling_factor = 1.0;
+	node[7].strain.zero_point = 0;
 
-	node[1].stress_location = WING_LOCATION_STAR_1;
-	node[1].general.measuring_strain = true;
-	node[1].strain.scaling_factor = 1.0;
-	node[1].strain.zero_point = 0;
+	node[8].stress_location = WING_LOCATION_STAR_1;
+	node[8].general.measuring_strain = true;
+	node[8].strain.scaling_factor = 1.0;
+	node[8].strain.zero_point = 0;
+	node[8].general.measuring_torsion = true;
+	node[8].torsion.scaling_factor = 1.0;
+	node[8].torsion.zero_point = 0;
 
-	node[2].stress_location = WING_LOCATION_STAR_2;
+	node[5].stress_location = WING_LOCATION_STAR_2;
+	node[5].general.measuring_strain = true;
+	node[5].strain.scaling_factor = 1.0;
+	node[5].strain.zero_point = 0;
+
+	node[2].stress_location = WING_LOCATION_STAR_3;
 	node[2].general.measuring_strain = true;
 	node[2].strain.scaling_factor = 1.0;
 	node[2].strain.zero_point = 0;
-
-	node[3].stress_location = WING_LOCATION_STAR_3;
-	node[3].general.measuring_strain = true;
-	node[3].strain.scaling_factor = 1.0;
-	node[3].strain.zero_point = 0;
 
 	node[4].stress_location = WING_LOCATION_PORT_1;
 	node[4].general.measuring_strain = true;
 	node[4].strain.scaling_factor = 1.0;
 	node[4].strain.zero_point = 0;
 
-	node[5].stress_location = WING_LOCATION_PORT_2;
-	node[5].general.measuring_strain = true;
-	node[5].strain.scaling_factor = 1.0;
-	node[5].strain.zero_point = 0;
-
-	node[6].stress_location = WING_LOCATION_PORT_3;
+	node[6].stress_location = WING_LOCATION_PORT_2;
 	node[6].general.measuring_strain = true;
 	node[6].strain.scaling_factor = 1.0;
 	node[6].strain.zero_point = 0;
 
-	node[7].stress_location = WING_LOCATION_TORSION_1;
-	node[7].general.measuring_torsion = true;
-	node[7].torsion.scaling_factor = 1.0;
-	node[7].torsion.zero_point = 0;
+	node[1].stress_location = WING_LOCATION_PORT_3;
+	node[1].general.measuring_strain = true;
+	node[1].strain.scaling_factor = 1.0;
+	node[1].strain.zero_point = 0;
+
 
 	HAL_CAN_Start(can);
 
@@ -187,6 +186,7 @@ void wing_record_strain(uint16_t can_message_id, uint8_t* rx_buffer) {
 		break;
 	case WING_LOCATION_STAR_1:
 		current_loading.strain_starboard[0] = temp.strain_reading;
+		current_loading.torsion = temp.torsion_reading;
 		break;
 	case WING_LOCATION_STAR_2:
 		current_loading.strain_starboard[1] = temp.strain_reading;
@@ -202,9 +202,6 @@ void wing_record_strain(uint16_t can_message_id, uint8_t* rx_buffer) {
 		break;
 	case WING_LOCATION_PORT_3:
 		current_loading.strain_port[2] = temp.strain_reading;
-		break;
-	case WING_LOCATION_TORSION_1:
-		current_loading.torsion = temp.torsion_reading;
 		break;
 	case WING_LOCATION_INVALID: // Fall through to default
 	default:
