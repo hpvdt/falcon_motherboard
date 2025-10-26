@@ -824,13 +824,18 @@ void USB_CDC_RxHandler(uint8_t* buffer, uint32_t length) {
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "Valid command characters:\n");
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Print this help message (no node/parameter)\n", CLI_HELP);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Toggle load reading printout (no node/parameter)\n", CLI_READINGS);
-		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Flash a node's status light a specified number of times\n", CLI_FLASH);
-		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain zero point\n", CLI_STR_ZERO);
-		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain scaling factor\n", CLI_STR_SCALE);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Flash a node's light P times\n", CLI_FLASH);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain zero point as P\n", CLI_STR_ZERO);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain scaling factor as P\n", CLI_STR_SCALE);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain gain as a power of 2 from 0 to 7\n", CLI_STR_GAIN);
-		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion zero point\n", CLI_TOR_ZERO);
-		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion scaling factor\n", CLI_TOR_SCALE);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion zero point as P\n", CLI_TOR_ZERO);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion scaling factor as P\n", CLI_TOR_SCALE);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion gain as a power of 2 from 0 to 7\n", CLI_TOR_GAIN);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\nPROCEDURE TO CALIBRATE WING LOAD MODULES:\n");
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t0. Set gain to 0, zero point to 0, and scale to 1.0. This will provide RAV ADC readings\n");
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t1. Increase gain until pleased with results. Max readings are +/-8388608 so avoid going too close otherwise more loading won't register!\n");
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t2. Record/set the zero point\n");
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t3. Determine and then set the scaling factor. If it reads 100 and 1.0 is desired, enter 0.01\n");
 			break;
 	case CLI_READINGS:
 		print_readings = !print_readings;
