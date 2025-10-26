@@ -39,4 +39,14 @@ void wing_config_node(CAN_HandleTypeDef* can, struct WingModuleConfig* config);
 void wing_record_strain(uint16_t can_message_id, uint8_t* rx_buffer);
 void wing_report_strain(struct WingLoading* destination);
 
+void wing_set_strain_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
+void wing_set_strain_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
+void wing_set_strain_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+
+void wing_set_torsion_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
+void wing_set_torsion_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
+void wing_set_torsion_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+
+void wing_flash_node(CAN_HandleTypeDef* can, uint8_t node, uint8_t count, uint16_t period_on_ms, uint16_t period_off_ms);
+
 #endif /* INC_WING_MODULES_H_ */

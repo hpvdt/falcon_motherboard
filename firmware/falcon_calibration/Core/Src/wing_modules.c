@@ -211,3 +211,38 @@ void wing_record_strain(uint16_t can_message_id, uint8_t* rx_buffer) {
 void wing_report_strain(struct WingLoading* destination) {
 	memcpy(destination, &current_loading, sizeof(struct WingLoading));
 }
+
+void wing_set_strain_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
+void wing_set_strain_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
+void wing_set_strain_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+
+void wing_set_torsion_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
+void wing_set_torsion_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
+void wing_set_torsion_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+
+void wing_flash_node(CAN_HandleTypeDef* can, uint8_t node, uint8_t count, uint16_t period_on_ms, uint16_t period_off_ms) {
+	const uint8_t HEART_BEAT_MAX = 80;
+	const uint8_t HEART_BEAT_MIN = 0;
+
+	struct CANLightCommand msg = {
+			.heart_beat_max_duty = HEART_BEAT_MAX,
+			.heart_beat_min_duty = HEART_BEAT_MIN,
+			.pulse_count = count,
+			.pulse_period_on_ms = period_on_ms,
+			.pulse_period_off_ms = period_off_ms,
+	};
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t COMMAND_ID = node | CAN_COMMAND_LIGHT_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = COMMAND_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+	temp_header.DLC = can_pack_light_command(tx_buffer, msg);
+
+	can_send_message(can, temp_header, tx_buffer, 10);
+}

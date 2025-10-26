@@ -824,10 +824,20 @@ void USB_CDC_RxHandler(uint8_t* buffer, uint32_t length) {
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "Valid command characters:\n");
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Print this help message (no node/parameter)\n", CLI_HELP);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Toggle load reading printout (no node/parameter)\n", CLI_READINGS);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Flash a node's status light a specified number of times\n", CLI_FLASH);
 			break;
 	case CLI_READINGS:
 		print_readings = !print_readings;
 		snprintf(output_message, OUT_BUF_LEN, "Toggled reading printing\n");
+			break;
+	case CLI_FLASH:
+		if (terms_found != 3) {
+			snprintf(output_message, OUT_BUF_LEN, "Not proper form for flash command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		uint8_t flashes = (uint8_t)parameter;
+		wing_flash_node(&hcan1, node_id, flashes, 600, 400);
+		snprintf(output_message, OUT_BUF_LEN, "Flashing node %d %d times\n", node_id, flashes);
 			break;
 	case CLI_UNKNOWN:
 	default:
@@ -837,7 +847,7 @@ void USB_CDC_RxHandler(uint8_t* buffer, uint32_t length) {
 
 	if (output_message[0] == 0) return;
 
-	printf("%s\n", output_message);
+	printf("%s", output_message);
 }
 /* USER CODE END 4 */
 
