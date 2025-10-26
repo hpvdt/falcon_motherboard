@@ -9,90 +9,103 @@ static struct WingModuleConfig node[32];
 static struct WingLoading current_loading;
 
 void wing_setup(CAN_HandleTypeDef* can) {
-	struct CANNodeGeneralConfigCommand default_general = {
-		.driving_servo = false,
-		.measuring_lidar = false,
-		.measuring_strain = false,
-		.measuring_torsion = false,
-		.operating_indicator = false,
-		.update_period_ms = 200,
-	};
-	struct CANServoConfigCommand default_servo = {
-		.misalignment_alarm_sec = 0,
-		.position_tolerance_half_percent = 20,
-		.potentiometer_bottom = 0,
-		.potentiometer_top = 4095,
-		.scheme = CONTROL_SCHEME_OPEN,
-		.servo_bottom_us = 1500,
-		.servo_top_us = 2500,
-		.surface = CONTROL_SURFACE_PORT,
-	};
-	struct CANStrainGaugeConfigCommand default_strain_torsion = {
-		.buffer_depth_64_samples = 3,
-		.gain = ADS_PGA_GAIN_32,
-		.osr = ADS_OSR_RATIO_4096,
-		.scaling_factor = 1.0,
-		.zero_point = 0,
-	};
-	struct CANLidarConfigCommand default_lidar = {
-		.alarm_level = 3000,
-		.buffer_depth = 200,
-	};
-	struct CANIndicatorConfigCommand default_indicator = {
-		.buzzer_period_ms = 2000,
-		.disable_buzzer = false,
-		.invert_led = 0,
-	};
+	static bool initial_config = true;
 
-	for (uint_fast8_t n = 0; n < 32; n++) {
-		node[n].node_id = n; // Tagged for easier debugging as it might get passed around
-		node[n].stress_location = WING_LOCATION_INVALID;
-		node[n].general = default_general;
-		node[n].indicator = default_indicator;
-		node[n].lidar = default_lidar;
-		node[n].servo = default_servo;
-		node[n].strain = default_strain_torsion;
-		node[n].torsion = default_strain_torsion;
+	if (initial_config) {
+		initial_config = false;
+
+		struct CANNodeGeneralConfigCommand default_general = {
+			.driving_servo = false,
+			.measuring_lidar = false,
+			.measuring_strain = false,
+			.measuring_torsion = false,
+			.operating_indicator = false,
+			.update_period_ms = 200,
+		};
+		struct CANServoConfigCommand default_servo = {
+			.misalignment_alarm_sec = 0,
+			.position_tolerance_half_percent = 20,
+			.potentiometer_bottom = 0,
+			.potentiometer_top = 4095,
+			.scheme = CONTROL_SCHEME_OPEN,
+			.servo_bottom_us = 1500,
+			.servo_top_us = 2500,
+			.surface = CONTROL_SURFACE_PORT,
+		};
+		struct CANStrainGaugeConfigCommand default_strain_torsion = {
+			.buffer_depth_64_samples = 3,
+			.gain = ADS_PGA_GAIN_1,
+			.osr = ADS_OSR_RATIO_4096,
+			.scaling_factor = 1.0,
+			.zero_point = 0,
+		};
+		struct CANLidarConfigCommand default_lidar = {
+			.alarm_level = 3000,
+			.buffer_depth = 200,
+		};
+		struct CANIndicatorConfigCommand default_indicator = {
+			.buzzer_period_ms = 2000,
+			.disable_buzzer = false,
+			.invert_led = 0,
+		};
+
+		for (uint_fast8_t n = 0; n < 32; n++) {
+			node[n].node_id = n; // Tagged for easier debugging as it might get passed around
+			node[n].stress_location = WING_LOCATION_INVALID;
+			node[n].general = default_general;
+			node[n].indicator = default_indicator;
+			node[n].lidar = default_lidar;
+			node[n].servo = default_servo;
+			node[n].strain = default_strain_torsion;
+			node[n].torsion = default_strain_torsion;
+		}
+
+		node[7].stress_location = WING_LOCATION_CENTER;
+		node[7].general.measuring_strain = true;
+		node[7].strain.scaling_factor = 1.0;
+		node[7].strain.zero_point = 0;
+		node[7].strain.gain = ADS_PGA_GAIN_1;
+
+		node[0].stress_location = WING_LOCATION_STAR_1;
+		node[0].general.measuring_strain = true;
+		node[0].strain.scaling_factor = 1.0;
+		node[0].strain.zero_point = 0;
+		node[0].strain.gain = ADS_PGA_GAIN_1;
+		node[0].general.measuring_torsion = true;
+		node[0].torsion.scaling_factor = 1.0;
+		node[0].torsion.zero_point = 0;
+		node[0].torsion.gain = ADS_PGA_GAIN_1;
+
+		node[5].stress_location = WING_LOCATION_STAR_2;
+		node[5].general.measuring_strain = true;
+		node[5].strain.scaling_factor = 1.0;
+		node[5].strain.zero_point = 0;
+		node[5].strain.gain = ADS_PGA_GAIN_1;
+
+		node[2].stress_location = WING_LOCATION_STAR_3;
+		node[2].general.measuring_strain = true;
+		node[2].strain.scaling_factor = 1.0;
+		node[2].strain.zero_point = 0;
+		node[2].strain.gain = ADS_PGA_GAIN_1;
+
+		node[4].stress_location = WING_LOCATION_PORT_1;
+		node[4].general.measuring_strain = true;
+		node[4].strain.scaling_factor = 1.0;
+		node[4].strain.zero_point = 0;
+		node[4].strain.gain = ADS_PGA_GAIN_1;
+
+		node[6].stress_location = WING_LOCATION_PORT_2;
+		node[6].general.measuring_strain = true;
+		node[6].strain.scaling_factor = 1.0;
+		node[6].strain.zero_point = 0;
+		node[6].strain.gain = ADS_PGA_GAIN_1;
+
+		node[1].stress_location = WING_LOCATION_PORT_3;
+		node[1].general.measuring_strain = true;
+		node[1].strain.scaling_factor = 1.0;
+		node[1].strain.zero_point = 0;
+		node[1].strain.gain = ADS_PGA_GAIN_1;
 	}
-
-	node[7].stress_location = WING_LOCATION_CENTER;
-	node[7].general.measuring_strain = true;
-	node[7].strain.scaling_factor = 1.0;
-	node[7].strain.zero_point = 0;
-
-	node[8].stress_location = WING_LOCATION_STAR_1;
-	node[8].general.measuring_strain = true;
-	node[8].strain.scaling_factor = 1.0;
-	node[8].strain.zero_point = 0;
-	node[8].general.measuring_torsion = true;
-	node[8].torsion.scaling_factor = 1.0;
-	node[8].torsion.zero_point = 0;
-
-	node[5].stress_location = WING_LOCATION_STAR_2;
-	node[5].general.measuring_strain = true;
-	node[5].strain.scaling_factor = 1.0;
-	node[5].strain.zero_point = 0;
-
-	node[2].stress_location = WING_LOCATION_STAR_3;
-	node[2].general.measuring_strain = true;
-	node[2].strain.scaling_factor = 1.0;
-	node[2].strain.zero_point = 0;
-
-	node[4].stress_location = WING_LOCATION_PORT_1;
-	node[4].general.measuring_strain = true;
-	node[4].strain.scaling_factor = 1.0;
-	node[4].strain.zero_point = 0;
-
-	node[6].stress_location = WING_LOCATION_PORT_2;
-	node[6].general.measuring_strain = true;
-	node[6].strain.scaling_factor = 1.0;
-	node[6].strain.zero_point = 0;
-
-	node[1].stress_location = WING_LOCATION_PORT_3;
-	node[1].general.measuring_strain = true;
-	node[1].strain.scaling_factor = 1.0;
-	node[1].strain.zero_point = 0;
-
 
 	HAL_CAN_Start(can);
 
@@ -212,15 +225,118 @@ void wing_report_strain(struct WingLoading* destination) {
 	memcpy(destination, &current_loading, sizeof(struct WingLoading));
 }
 
-void wing_set_strain_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
-void wing_set_strain_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
-void wing_set_strain_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+void wing_set_strain_zero(CAN_HandleTypeDef* can, uint8_t node_id, int32_t zero) {
+	node[node_id].strain.zero_point = zero;
 
-void wing_set_torsion_zero(CAN_HandleTypeDef* can, uint8_t node, int32_t zero);
-void wing_set_torsion_scale(CAN_HandleTypeDef* can, uint8_t node, float scale);
-void wing_set_torsion_gain(CAN_HandleTypeDef* can, uint8_t node, uint8_t gain);
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
 
-void wing_flash_node(CAN_HandleTypeDef* can, uint8_t node, uint8_t count, uint16_t period_on_ms, uint16_t period_off_ms) {
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_STRAIN << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].strain);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+void wing_set_strain_scale(CAN_HandleTypeDef* can, uint8_t node_id, float scale) {
+	node[node_id].strain.scaling_factor = scale;
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_STRAIN << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].strain);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+void wing_set_strain_gain(CAN_HandleTypeDef* can, uint8_t node_id, uint8_t gain) {
+	if (gain > 7) return;
+	node[node_id].strain.gain = gain;
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_STRAIN << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].strain);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+
+void wing_set_torsion_zero(CAN_HandleTypeDef* can, uint8_t node_id, int32_t zero) {
+	node[node_id].torsion.zero_point = zero;
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_TORSION << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].torsion);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+void wing_set_torsion_scale(CAN_HandleTypeDef* can, uint8_t node_id, float scale) {
+	node[node_id].torsion.scaling_factor = scale;
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_TORSION << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].torsion);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+void wing_set_torsion_gain(CAN_HandleTypeDef* can, uint8_t node_id, uint8_t gain) {
+	if (gain > 7) return;
+	node[node_id].torsion.gain = gain;
+
+	uint8_t tx_buffer[8] = {0};
+	const uint32_t BASE_ID = node_id | CAN_CONFIG_ID_BASE; // Base value, needs to get specific
+
+	CAN_TxHeaderTypeDef temp_header = {
+		.StdId = BASE_ID,
+		.RTR = CAN_RTR_DATA,
+		.IDE = CAN_ID_STD,
+		.ExtId = 0,
+		.TransmitGlobalTime = false,
+	};
+
+	temp_header.StdId = BASE_ID | (CONFIG_MESSAGE_TORSION << CAN_CONFIG_BIT_START);
+	temp_header.DLC = can_pack_strain_gauge_config_command(tx_buffer, node[node_id].torsion);
+	can_send_message(can, temp_header, tx_buffer, 10);
+}
+void wing_flash_node(CAN_HandleTypeDef* can, uint8_t node_id, uint8_t count, uint16_t period_on_ms, uint16_t period_off_ms) {
 	const uint8_t HEART_BEAT_MAX = 80;
 	const uint8_t HEART_BEAT_MIN = 0;
 
@@ -233,7 +349,7 @@ void wing_flash_node(CAN_HandleTypeDef* can, uint8_t node, uint8_t count, uint16
 	};
 
 	uint8_t tx_buffer[8] = {0};
-	const uint32_t COMMAND_ID = node | CAN_COMMAND_LIGHT_ID_BASE; // Base value, needs to get specific
+	const uint32_t COMMAND_ID = node_id | CAN_COMMAND_LIGHT_ID_BASE; // Base value, needs to get specific
 
 	CAN_TxHeaderTypeDef temp_header = {
 		.StdId = COMMAND_ID,

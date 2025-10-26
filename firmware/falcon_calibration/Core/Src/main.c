@@ -815,39 +815,112 @@ void USB_CDC_RxHandler(uint8_t* buffer, uint32_t length) {
 	char output_message[OUT_BUF_LEN];
 	output_message[0] = 0; // Default to an empty string
 
+	int pos = 0;
 	switch (command) {
 	case CLI_HELP:
 		print_readings = false; // Stop reading to not swamp printed message
-		int pos = 0;
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\n\nFALCON CALIBRATION FIRMWARE HELP\n");
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "All commands follow format \"CN,P\" where:\n\tC is command character\n\tN is target node\n\tP is optional parameter\n");
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "Valid command characters:\n");
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Print this help message (no node/parameter)\n", CLI_HELP);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Toggle load reading printout (no node/parameter)\n", CLI_READINGS);
 		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Flash a node's status light a specified number of times\n", CLI_FLASH);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain zero point\n", CLI_STR_ZERO);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain scaling factor\n", CLI_STR_SCALE);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node strain gain as a power of 2 from 0 to 7\n", CLI_STR_GAIN);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion zero point\n", CLI_TOR_ZERO);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion scaling factor\n", CLI_TOR_SCALE);
+		pos += snprintf(&output_message[pos], OUT_BUF_LEN - pos, "\t%c - Set node torsion gain as a power of 2 from 0 to 7\n", CLI_TOR_GAIN);
 			break;
 	case CLI_READINGS:
 		print_readings = !print_readings;
-		snprintf(output_message, OUT_BUF_LEN, "Toggled reading printing\n");
+		pos = snprintf(output_message, OUT_BUF_LEN, "Toggled reading printing\n");
 			break;
 	case CLI_FLASH:
 		if (terms_found != 3) {
-			snprintf(output_message, OUT_BUF_LEN, "Not proper form for flash command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for flash command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
 			break;
 		}
 		uint8_t flashes = (uint8_t)parameter;
 		wing_flash_node(&hcan1, node_id, flashes, 600, 400);
-		snprintf(output_message, OUT_BUF_LEN, "Flashing node %d %d times\n", node_id, flashes);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Flashing node %d %d times\n", node_id, flashes);
 			break;
+	case CLI_STR_ZERO:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for strain zero command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		int32_t str_zero_point = (int32_t)parameter;
+		wing_set_strain_zero(&hcan1, node_id, str_zero_point);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d zero point to %ld\n", node_id, str_zero_point);
+			break;
+	case CLI_STR_GAIN:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for strain gain command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		uint8_t str_gain = (uint8_t)parameter;
+		if (str_gain > 7) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Gain must be 0 to 7 inclusive, read %d.\n", str_gain);
+			break;
+		}
+		wing_set_strain_gain(&hcan1, node_id, str_gain);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d zero point to %d\n", node_id, str_gain);
+			break;
+	case CLI_STR_SCALE:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for strain scale command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		wing_set_strain_scale(&hcan1, node_id, parameter);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d scale factor to %f\n", node_id, parameter);
+			break;
+
+
+
+	case CLI_TOR_ZERO:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for torsion zero command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		int32_t tor_zero_point = (int32_t)parameter;
+		wing_set_torsion_zero(&hcan1, node_id, tor_zero_point);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d torsion zero point to %ld\n", node_id, tor_zero_point);
+			break;
+	case CLI_TOR_GAIN:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for torsion gain command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		uint8_t tor_gain = (uint8_t)parameter;
+		if (tor_gain > 7) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Gain must be 0 to 7 inclusive, read %d.\n", tor_gain);
+			break;
+		}
+		wing_set_torsion_gain(&hcan1, node_id, tor_gain);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d torsion gain to %d\n", node_id, tor_gain);
+			break;
+	case CLI_TOR_SCALE:
+		if (terms_found != 3) {
+			pos = snprintf(output_message, OUT_BUF_LEN, "Not proper form for torsion scale command: \"%s\". Check HELP using \"%c\".\n", buffer, CLI_HELP);
+			break;
+		}
+		wing_set_torsion_scale(&hcan1, node_id, parameter);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Set node %d scale factor to %f\n", node_id, parameter);
+			break;
+
+
+
 	case CLI_UNKNOWN:
 	default:
-		snprintf(output_message, OUT_BUF_LEN, "Command not recognized \"%s\"\n", buffer);
+		pos = snprintf(output_message, OUT_BUF_LEN, "Command not recognized \"%s\"\n", buffer);
 		break;
 	}
 
 	if (output_message[0] == 0) return;
 
-	printf("%s", output_message);
+	CDC_Transmit_FS((uint8_t*)output_message, pos);
+	//printf("%s", output_message);
 }
 /* USER CODE END 4 */
 
