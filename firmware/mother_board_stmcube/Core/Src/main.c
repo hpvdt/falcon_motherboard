@@ -30,6 +30,7 @@
 #include "can_wrapper.h"
 #include "wing_modules.h"
 #include "ina219.h"
+#include "scd4x.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,6 +71,8 @@ TIM_HandleTypeDef* led_ind_clk = &htim4;
 uint32_t led_ind_chn = TIM_CHANNEL_2;
 TIM_HandleTypeDef* led_heartbeat_clk = &htim3;
 uint32_t led_heartbeat_chn = TIM_CHANNEL_3;
+
+const uint32_t I2C_TIMEOUT = 10; // Timeout to be used for I2C interactions
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -168,22 +171,25 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  struct LEDMoBoConfig led_config = {
+	struct LEDMoBoConfig led_config = {
 		  .error_timer = led_err_clk,
 		  .error_channel = led_err_chn,
 		  .indicator_timer = led_ind_clk,
 		  .indicator_channel = led_ind_chn,
 		  .heartbeat_timer = led_heartbeat_clk,
 		  .heartbeat_channel = led_heartbeat_chn,
-  };
-  led_setup(&led_config);
+	};
+	led_setup(&led_config);
 
-  wing_setup(&hcan1);
-  uint8_t usb_tx_buffer[500] = {0};
-  uint16_t usb_tx_length = 0;
+	wing_setup(&hcan1);
+	uint8_t usb_tx_buffer[500] = {0};
+	uint16_t usb_tx_length = 0;
 
-  HAL_StatusTypeDef ret = ina219_setup(&hfmpi2c1, 10000);
-  printf("INA219 setup result: %d\n\r", ret);
+	HAL_StatusTypeDef ret = ina219_setup(&hfmpi2c1, I2C_TIMEOUT);
+	printf("INA219 setup result: %d\n\r", ret);
+
+	ret = scd4x_setup(&hfmpi2c1, I2C_TIMEOUT);
+	printf("SCD41 setup result: %d\n\r", ret);
   /* USER CODE END 2 */
 
   /* Infinite loop */
