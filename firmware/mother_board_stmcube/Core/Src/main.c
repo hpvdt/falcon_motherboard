@@ -29,6 +29,7 @@
 #include "led_operation.h"
 #include "can_wrapper.h"
 #include "wing_modules.h"
+#include "ina219.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -180,6 +181,9 @@ int main(void)
   wing_setup(&hcan1);
   uint8_t usb_tx_buffer[500] = {0};
   uint16_t usb_tx_length = 0;
+
+  HAL_StatusTypeDef ret = ina219_setup(&hfmpi2c1, 10000);
+  printf("INA219 setup result: %d\n\r", ret);
   /* USER CODE END 2 */
 
   /* Infinite loop */
