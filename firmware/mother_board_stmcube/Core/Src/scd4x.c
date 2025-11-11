@@ -81,6 +81,12 @@ HAL_StatusTypeDef scd4x_setup(FMPI2C_HandleTypeDef* bus, uint32_t timeout) {
 	ret = HAL_FMPI2C_IsDeviceReady(scd4x_i2c, SCD4X_ADD, TRIAL_COUNT, scd4x_timeout);
 	if (ret != HAL_OK) return ret;
 
+	// Need to stop periodic measurements before potentially restarting them
+	// This is to prevent issues when rebooting MCU but not the sensor itself
+	ret = scd4x_issue_command(SCD_CMD_STOP_PERIODIC_MEASUREMENT);
+	if (ret != HAL_OK) return ret;
+	HAL_Delay(10); // Need to allow sensor to process command
+
 	return scd4x_issue_command(SCD_CMD_START_PERIODIC_MEASUREMENT);
 }
 
