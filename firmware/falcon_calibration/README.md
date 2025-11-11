@@ -7,7 +7,7 @@ The program works like a command line utility via a USB connection from the moth
 For assistance at any point in using the calibration firmware, send an `H` to the motherboard over serial and it will respond with the help menu.
 
 >[!IMPORTANT]
-> **All determined calibration values *MUST* be recorded _outside_ of the calibration program!** Either by hand or copied to some document, so they can then be hardcoded into the actual Falcon operation firmware. They can be recorded as expressions instead of final results, e.g. `100.0/3654897` as a load scaling factor instead of recording `0.0000274` as a scaling factor you can record  so we know that at 100% load the ADC read 3654897. 
+> **All determined calibration values *MUST* be recorded _outside_ of the calibration program!** Either by hand or copied to some document, so they can then be hardcoded into the actual Falcon operation firmware. They can be recorded as expressions instead of final results to preserve precision, e.g. `100.0/3654897` as a load scaling factor instead of recording `0.0000274` so we know that at 100% load the ADC reads 3654897.
 >
 > Not using persistent storage on the microcontroller and hardcoding them into firmware instead was an intentional design choice to ensure that we were using known calibration values and would not potentially lose them.
 
