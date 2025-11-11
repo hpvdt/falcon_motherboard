@@ -31,6 +31,10 @@
 #include "wing_modules.h"
 #include "ina219.h"
 #include "scd4x.h"
+
+#include "bosch_wrappers.h"
+#include "../../BME280_SensorAPI/Inc/bme280.h"
+#include "../../BME280_SensorAPI/Inc/bme280_defs.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -181,7 +185,7 @@ int main(void)
 	};
 	led_setup(&led_config);
 
-	wing_setup(&hcan1);
+//	wing_setup(&hcan1);
 	uint8_t usb_tx_buffer[500] = {0};
 	uint16_t usb_tx_length = 0;
 
@@ -190,30 +194,65 @@ int main(void)
 
 	ret = scd4x_setup(&hfmpi2c1, I2C_TIMEOUT);
 	printf("SCD41 setup result: %d\n\r", ret);
+
+
+
+	HAL_NVIC_EnableIRQ(8);
+	struct BoschI2C bme_interface = {
+			.i2c_handle = &hfmpi2c1,
+			.address = 0x77,
+	};
+
+	struct bme280_dev dev = {
+		.chip_id = BME280_CHIP_ID,
+		.intf = BME280_I2C_INTF,
+		.intf_ptr = &bme_interface,
+		.read = bosch_read_i2c,
+		.write = bosch_write_i2c,
+		.delay_us = bosch_delay_us,
+	};
+	uint8_t bme_init = bme280_init(&dev);
+	printf("BME280 setup result: %d\n\r", bme_init);
+	struct bme280_settings settings = {
+			.osr_p = BME280_OVERSAMPLING_4X,
+			.osr_t = BME280_OVERSAMPLING_4X,
+			.osr_h = BME280_OVERSAMPLING_4X,
+			.filter = BME280_FILTER_COEFF_4,
+			.standby_time= BME280_STANDBY_TIME_0_5_MS,
+	};
+	bme_init = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &dev);
+	printf("BME280 settings result: %d\n\r", bme_init);
+	bme_init = bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &dev);
+	printf("BME280 mode result: %d\n\r", bme_init);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_LOAD_FIFO) > 0) {
-		  CAN_RxHeaderTypeDef rx_header = {0};
-		  uint8_t rx_buffer[8] = {0};
-		  HAL_CAN_GetRxMessage(&hcan1, CAN_LOAD_FIFO, &rx_header, rx_buffer);
-
-		  wing_record_strain(rx_header.StdId, rx_buffer);
-	  }
+//	  if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_LOAD_FIFO) > 0) {
+//		  CAN_RxHeaderTypeDef rx_header = {0};
+//		  uint8_t rx_buffer[8] = {0};
+//		  HAL_CAN_GetRxMessage(&hcan1, CAN_LOAD_FIFO, &rx_header, rx_buffer);
+//
+//		  wing_record_strain(rx_header.StdId, rx_buffer);
+//	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      led_operate(&led_config);
+//      led_operate(&led_config);
+//
+//      usb_tx_length = print_nice_loading(usb_tx_buffer, sizeof(usb_tx_buffer));
+//      if (usb_tx_length > 0) {
+//    	  CDC_Transmit_FS(usb_tx_buffer, usb_tx_length);
+//    	  wing_setup(&hcan1);
+//      }
+      HAL_Delay(1000);
 
-      usb_tx_length = print_nice_loading(usb_tx_buffer, sizeof(usb_tx_buffer));
-      if (usb_tx_length > 0) {
-    	  CDC_Transmit_FS(usb_tx_buffer, usb_tx_length);
-    	  wing_setup(&hcan1);
-      }
-      HAL_Delay(10);
+      struct bme280_data temp_data;
+      bme_init = bme280_get_sensor_data(BME280_ALL, &temp_data, &dev);
+
+      printf("[%02d]T: %.2f\tH: %.2f\tP: %.2f\n\r", bme_init, temp_data.temperature, temp_data.humidity, temp_data.pressure);
   }
   /* USER CODE END 3 */
 }
@@ -317,14 +356,14 @@ static void MX_FMPI2C1_Init(void)
 
   /* USER CODE END FMPI2C1_Init 1 */
   hfmpi2c1.Instance = FMPI2C1;
-  hfmpi2c1.Init.Timing = 0x00C0EAFF;
+  hfmpi2c1.Init.Timing = 0x00601956;
   hfmpi2c1.Init.OwnAddress1 = 0;
   hfmpi2c1.Init.AddressingMode = FMPI2C_ADDRESSINGMODE_7BIT;
   hfmpi2c1.Init.DualAddressMode = FMPI2C_DUALADDRESS_DISABLE;
   hfmpi2c1.Init.OwnAddress2 = 0;
   hfmpi2c1.Init.OwnAddress2Masks = FMPI2C_OA2_NOMASK;
   hfmpi2c1.Init.GeneralCallMode = FMPI2C_GENERALCALL_DISABLE;
-  hfmpi2c1.Init.NoStretchMode = FMPI2C_NOSTRETCH_DISABLE;
+  hfmpi2c1.Init.NoStretchMode = FMPI2C_NOSTRETCH_ENABLE;
   if (HAL_FMPI2C_Init(&hfmpi2c1) != HAL_OK)
   {
     Error_Handler();
