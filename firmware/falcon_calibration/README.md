@@ -52,7 +52,7 @@ All wing load calibration commands follow format `CN,P` where:
 | `Z` | Set node torsion gain as a power of 2 | Unsigned integer, 0 to 7 inclusive |
 
 >[!WARNING]
-> **Ensure the values you enter are valid.** There are minimal checks and protection against user mis-input in the firmware so invalid inputs may lead to unexpected behaviour. In the event the system acts abnormally cycle power to the system and restart the process.
+> **Ensure the values you enter are valid.** There are minimal checks and protection against user mis-input in the firmware so invalid inputs may lead to unexpected behaviour. **In the event the system acts abnormally simply cycle power to the system and restart the process.**
 
 ## Wing Load Calibration Procedure
 
