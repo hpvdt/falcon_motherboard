@@ -43,13 +43,16 @@ All wing load calibration commands follow format `CN,P` where:
 | --- | --- | --- |
 | `H` | Print help message _(a basic summary of this `README.md`)_ | No parameter |
 | `R` | Toggle load reading printout | No parameter |
-| `F` | Flash a node's light P times | Integer |
-| `A` | Set node strain zero point as P | Integer |
+| `F` | Flash a node's light P times | Unsigned Integer, 1 to 255 inclusive |
+| `A` | Set node strain zero point as P | Signed integer, -&nbsp;8&nbsp;388&nbsp;608 to +&nbsp;8&nbsp;388&nbsp;607 inclusive |
 | `B` | Set node strain scaling factor as P | Real number |
-| `C` | Set node strain gain as a power of 2 | Integer, 0 to 7 inclusive |
-| `X` | Set node torsion zero point as P | Integer |
+| `C` | Set node strain gain as a power of 2 | Unsigned integer, 0 to 7 inclusive |
+| `X` | Set node torsion zero point as P | Signed integer, -&nbsp;8&nbsp;388&nbsp;608 to +&nbsp;8&nbsp;388&nbsp;607 inclusive |
 | `Y` | Set node torsion scaling factor as P | Real number |
-| `Z` | Set node torsion gain as a power of 2 | Integer, 0 to 7 inclusive |
+| `Z` | Set node torsion gain as a power of 2 | Unsigned integer, 0 to 7 inclusive |
+
+>[!WARNING]
+> **Ensure the values you enter are valid.** There are minimal checks and protection against user mis-input in the firmware so invalid inputs may lead to unexpected behaviour. In the event the system acts abnormally cycle power to the system and restart the process.
 
 ## Wing Load Calibration Procedure
 
