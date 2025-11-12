@@ -11,7 +11,11 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_fmpi2c.h"
 
-static const uint32_t I2C_TIMEOUT_MS = 100;
+static uint32_t I2C_TIMEOUT_MS = 100;
+
+void bosch_adjust_i2c_timeout(uint32_t timeout_i2c_ms) {
+	I2C_TIMEOUT_MS = timeout_i2c_ms;
+}
 
 void bosch_delay_us(uint32_t period_us, void *intf_ptr) {
 	(void) intf_ptr; // Not used

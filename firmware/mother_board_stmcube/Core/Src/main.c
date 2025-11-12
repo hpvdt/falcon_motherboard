@@ -30,11 +30,7 @@
 #include "can_wrapper.h"
 #include "wing_modules.h"
 #include "ina219.h"
-#include "scd4x.h"
-
-#include "bosch_wrappers.h"
-#include "../../BME280_SensorAPI/Inc/bme280.h"
-#include "../../BME280_SensorAPI/Inc/bme280_defs.h"
+#include "atmosphere.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -192,38 +188,7 @@ int main(void)
 	HAL_StatusTypeDef ret = ina219_setup(&hfmpi2c1, I2C_TIMEOUT);
 	printf("INA219 setup result: %d\n\r", ret);
 
-	ret = scd4x_setup(&hfmpi2c1, I2C_TIMEOUT);
-	printf("SCD41 setup result: %d\n\r", ret);
-
-
-
-	HAL_NVIC_EnableIRQ(8);
-	struct BoschI2C bme_interface = {
-			.i2c_handle = &hfmpi2c1,
-			.address = 0x77,
-	};
-
-	struct bme280_dev dev = {
-		.chip_id = BME280_CHIP_ID,
-		.intf = BME280_I2C_INTF,
-		.intf_ptr = &bme_interface,
-		.read = bosch_read_i2c,
-		.write = bosch_write_i2c,
-		.delay_us = bosch_delay_us,
-	};
-	uint8_t bme_init = bme280_init(&dev);
-	printf("BME280 setup result: %d\n\r", bme_init);
-	struct bme280_settings settings = {
-			.osr_p = BME280_OVERSAMPLING_4X,
-			.osr_t = BME280_OVERSAMPLING_4X,
-			.osr_h = BME280_OVERSAMPLING_4X,
-			.filter = BME280_FILTER_COEFF_4,
-			.standby_time= BME280_STANDBY_TIME_0_5_MS,
-	};
-	bme_init = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &dev);
-	printf("BME280 settings result: %d\n\r", bme_init);
-	bme_init = bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &dev);
-	printf("BME280 mode result: %d\n\r", bme_init);
+	ret = atmo_setup(&hfmpi2c1, I2C_TIMEOUT);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -249,10 +214,10 @@ int main(void)
 //      }
       HAL_Delay(1000);
 
-      struct bme280_data temp_data;
-      bme_init = bme280_get_sensor_data(BME280_ALL, &temp_data, &dev);
-
-      printf("[%02d]T: %.2f\tH: %.2f\tP: %.2f\n\r", bme_init, temp_data.temperature, temp_data.humidity, temp_data.pressure);
+      struct AtmoConditions atmo_cond;
+      ret = atmo_conditions_update(&atmo_cond);
+      printf("[%d]T: %.2f\tH: %.2f\tP: %.2f\tCO2: %d\n\r", ret, atmo_cond.temperature_c,
+    		  atmo_cond.humidity_rel, atmo_cond.static_pressure_pa, atmo_cond.co2_ppm);
   }
   /* USER CODE END 3 */
 }
