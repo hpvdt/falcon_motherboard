@@ -19,7 +19,6 @@
 #include "../../BMP3_SensorAPI/bmp3_defs.h"
 
 static const uint8_t BME280_ADDRESS = 0x77;
-
 struct BoschI2C bme280_interface;
 static struct bme280_dev dev_bme280 = {
 		.chip_id = BME280_CHIP_ID,
@@ -30,6 +29,7 @@ static struct bme280_dev dev_bme280 = {
 		.delay_us = bosch_delay_us,
 };
 
+static const uint8_t BMP390_ADDRESS = 0x76;
 struct BoschI2C bmp390_interface;
 static struct bmp3_dev dev_bmp390 = {
 		.chip_id = BMP390_CHIP_ID,
@@ -71,6 +71,8 @@ HAL_StatusTypeDef atmo_setup(FMPI2C_HandleTypeDef* bus, uint32_t i2c_timeout_ms)
 		if (bme_init < 0) any_error = true;
 	}
 
+	bmp390_interface.i2c_handle = bus;
+	bmp390_interface.address = BMP390_ADDRESS;
 	uint8_t bmp_init = bmp3_init(&dev_bmp390);
 	printf("BMP390 setup result: %d\n\r", bmp_init);
 	if (bmp_init < 0) any_error = true;
