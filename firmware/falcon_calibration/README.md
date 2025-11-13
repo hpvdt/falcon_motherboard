@@ -2,7 +2,7 @@
 
 This project serves as a utility to prepare Falcon's sensing systems in advance of actual flights, using the same motherboard as the calibration hardware to minimize discrepancies between calibrations and operation. In addition to calibrations, it also is meant to help serve by providing quick and human readable data streams to diagnose various subsystems.
 
-The program works like a command line utility via a USB connection from the motherboard to a host computer, where it presents itself as a USB-CDC (Serial) device. Opening a serial terminal to the motherboard allows one to begin the process.
+The program works like a command line utility via a USB connection from the motherboard to a host computer, where it presents itself as a USB-CDC (Serial) device. Opening a serial terminal to the motherboard allows one to begin using this firmware. In this document "serial", "terminal", and "USB" all refer to this CDC data link between the host and motherboard.
 
 For assistance at any point in using the calibration firmware, send an `H` to the motherboard over serial and it will respond with the help menu.
 
@@ -32,6 +32,18 @@ _Yes we could have installed them in an easier to remember way, but it's too lat
 
 All of these monitor bending strain at their locations, **only the innermost starboard (`8`) monitors torsional loading of the spar as well**.
 
+## Wing Load Readings
+
+You may start printing active wing readings to the serial terminal over USB by sending an `R` character. Sending a second `R` or summoning the help menu using `H` will stop the printing. _Any other commands will not affect the printing of values, thus the effect of user calibration commands can be quickly observed._
+
+The readings are printed in a comma separated format which makes them trivial to process later so long as the serial terminal is logged to a text file - the "Serial Monitor" addon for VS Code is my preferred tool for doing this automatically once you configure it to.
+
+The order of readings resemble their locations on the wing: the first value in a line is the most portside node's strain (left), then gradually sweeping across the wing to the most starboard node's strain, with the eigth value at the end of the row being the torsion load. The following text can be used as a CSV header line:
+
+```
+Port outer,Port mid,Port inner,Center,Starboard inner,Starboard mid,Starboard outer, Torsion (Starboard inner)
+```
+
 ## Wing Load Calibration Commands
 
 All wing load calibration commands follow format `CN,P` where:
@@ -52,7 +64,9 @@ All wing load calibration commands follow format `CN,P` where:
 | `Z` | Set node torsion gain as a power of 2 | Unsigned integer, 0 to 7 inclusive |
 
 >[!WARNING]
-> **Ensure the values you enter are valid.** There are minimal checks and protection against user mis-input in the firmware so invalid inputs may lead to unexpected behaviour. **In the event the system acts abnormally simply cycle power to the system and restart the process.**
+> **Ensure the values you enter are valid.** There are minimal checks and protection against user mis-input in the firmware so invalid inputs may lead to unexpected behaviour. 
+> 
+> **In the event the system acts abnormally simply cycle power to the system by disconnecting the USB from the host computer and plugging it back in.** You will need to manually reinput your recorded node calibration parameters to restore your progress. _There is no strict order for this rentry sequence._
 
 ## Wing Load Calibration Procedure
 
