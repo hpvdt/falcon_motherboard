@@ -25,12 +25,12 @@ void bosch_delay_us(uint32_t period_us, void *intf_ptr) {
 	HAL_Delay(milliseconds_roughly);
 }
 
-int8_t bosch_write_i2c(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr) {
+int8_t bosch_write_i2c_by_intf(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr) {
 	struct BoschI2C* interface = intf_ptr;
 	return HAL_FMPI2C_Mem_Write(interface->i2c_handle, interface->address << 1, reg_addr, 1, reg_data, len, I2C_TIMEOUT_MS);
 }
 
-int8_t bosch_read_i2c(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr) {
+int8_t bosch_read_i2c_by_intf(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr) {
 	struct BoschI2C* interface = intf_ptr;
 	return HAL_FMPI2C_Mem_Read(interface->i2c_handle, interface->address << 1, reg_addr, 1, reg_data, len, I2C_TIMEOUT_MS);
 }

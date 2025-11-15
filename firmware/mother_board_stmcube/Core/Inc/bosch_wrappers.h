@@ -18,7 +18,7 @@ struct BoschI2C {
 
 void bosch_adjust_i2c_timeout(uint32_t timeout_i2c_ms);
 void bosch_delay_us(uint32_t period_us, void *intf_ptr);
-int8_t bosch_write_i2c(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
-int8_t bosch_read_i2c(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
+int8_t bosch_write_i2c_by_intf(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
+int8_t bosch_read_i2c_by_intf(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
 
 #endif /* INC_BOSCH_WRAPPERS_H_ */

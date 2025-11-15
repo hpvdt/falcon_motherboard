@@ -24,8 +24,8 @@ static struct bme280_dev dev_bme280 = {
 		.chip_id = BME280_CHIP_ID,
 		.intf = BME280_I2C_INTF,
 		.intf_ptr = &bme280_interface,
-		.read = bosch_read_i2c,
-		.write = bosch_write_i2c,
+		.read = bosch_read_i2c_by_intf,
+		.write = bosch_write_i2c_by_intf,
 		.delay_us = bosch_delay_us,
 };
 
@@ -35,8 +35,8 @@ static struct bmp3_dev dev_bmp390 = {
 		.chip_id = BMP390_CHIP_ID,
 		.intf = BMP3_I2C_INTF,
 		.intf_ptr = &bmp390_interface,
-		.read = bosch_read_i2c,
-		.write = bosch_write_i2c,
+		.read = bosch_read_i2c_by_intf,
+		.write = bosch_write_i2c_by_intf,
 		.delay_us = bosch_delay_us,
 };
 

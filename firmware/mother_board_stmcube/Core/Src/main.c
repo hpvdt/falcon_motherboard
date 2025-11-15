@@ -31,6 +31,7 @@
 #include "wing_modules.h"
 #include "ina219.h"
 #include "atmosphere.h"
+#include "position.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -189,6 +190,8 @@ int main(void)
 	printf("INA219 setup result: %d\n\r", ret);
 
 	ret = atmo_setup(&hfmpi2c1, I2C_TIMEOUT);
+
+	ret = pos_setup(&hfmpi2c1, I2C_TIMEOUT);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -218,6 +221,9 @@ int main(void)
       ret = atmo_conditions_update(&atmo_cond);
       printf("[%d]T: %.2f\tH: %.2f\tP: %.2f\tCO2: %d\n\r", ret, atmo_cond.temperature_c,
     		  atmo_cond.humidity_rel, atmo_cond.static_pressure_pa, atmo_cond.co2_ppm);
+      struct OrientationState orientation = {0};
+      ret = pos_orientation_update(&orientation);
+      printf("[%d]R: %6.1f\tP: %6.1f\tY: %6.1f\n\r", ret, orientation.roll_deg, orientation.pitch_deg, orientation.yaw_deg);
   }
   /* USER CODE END 3 */
 }
