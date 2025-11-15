@@ -19,7 +19,7 @@
 #include "../../BMP3_SensorAPI/bmp3_defs.h"
 
 static const uint8_t BME280_ADDRESS = 0x77;
-struct BoschI2C bme280_interface;
+static struct BoschI2C bme280_interface;
 static struct bme280_dev dev_bme280 = {
 		.chip_id = BME280_CHIP_ID,
 		.intf = BME280_I2C_INTF,
@@ -30,7 +30,7 @@ static struct bme280_dev dev_bme280 = {
 };
 
 static const uint8_t BMP390_ADDRESS = 0x76;
-struct BoschI2C bmp390_interface;
+static struct BoschI2C bmp390_interface;
 static struct bmp3_dev dev_bmp390 = {
 		.chip_id = BMP390_CHIP_ID,
 		.intf = BMP3_I2C_INTF,

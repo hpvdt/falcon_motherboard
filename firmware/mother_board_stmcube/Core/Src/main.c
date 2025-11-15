@@ -214,7 +214,7 @@ int main(void)
 //      }
       HAL_Delay(1000);
 
-      struct AtmoConditions atmo_cond;
+      struct AtmoConditions atmo_cond = {0};
       ret = atmo_conditions_update(&atmo_cond);
       printf("[%d]T: %.2f\tH: %.2f\tP: %.2f\tCO2: %d\n\r", ret, atmo_cond.temperature_c,
     		  atmo_cond.humidity_rel, atmo_cond.static_pressure_pa, atmo_cond.co2_ppm);
