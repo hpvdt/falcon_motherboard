@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "can_wrapper.h"
+#include "falcon_data.h"
 
 enum WingStressLocation {
 	WING_LOCATION_INVALID = 0, // Default (0) should be invalid
@@ -25,13 +26,6 @@ struct WingModuleConfig {
 	struct CANStrainGaugeConfigCommand torsion;
 	struct CANLidarConfigCommand lidar;
 	struct CANIndicatorConfigCommand indicator;
-};
-
-struct WingLoading {
-	float strain_center;
-	float strain_starboard[3];
-	float strain_port[3];
-	float torsion;
 };
 
 void wing_setup(CAN_HandleTypeDef* can);

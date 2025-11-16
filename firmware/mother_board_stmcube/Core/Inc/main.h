@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "falcon_data.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,6 +55,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+int print_nice_wing_loading(struct WingLoading load, uint8_t* buffer, uint16_t buff_len);
+size_t pack_strain_message(struct WingLoading* data, uint8_t* buffer);
+size_t pack_main_message(struct CompleteAircraftData* data, uint8_t* buffer);
+size_t pack_gps_message(struct GPSState* data, uint8_t* buffer);
 
 /* USER CODE END EFP */
 

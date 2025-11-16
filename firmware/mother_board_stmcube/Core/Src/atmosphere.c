@@ -17,6 +17,7 @@
 #include "../../BME280_SensorAPI/bme280_defs.h"
 #include "../../BMP3_SensorAPI/bmp3.h"
 #include "../../BMP3_SensorAPI/bmp3_defs.h"
+#include "falcon_data.h"
 
 static const uint8_t BME280_ADDRESS = 0x77;
 static struct BoschI2C bme280_interface;

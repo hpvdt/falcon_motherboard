@@ -10,12 +10,8 @@
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_fmpi2c.h"
+#include "falcon_data.h"
 
-struct OrientationState {
-	float roll_deg;
-	float pitch_deg;
-	float yaw_deg;
-};
 
 HAL_StatusTypeDef pos_setup(FMPI2C_HandleTypeDef* bus, uint32_t i2c_timeout_ms);
 

@@ -101,33 +101,7 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int print_nice_loading(uint8_t* buffer, uint16_t buff_len) {
-	static uint32_t next_print_tick = 0;
-	uint32_t current_tick = HAL_GetTick();
 
-	if (current_tick < next_print_tick) {
-		buffer[0] = '\0'; // Nullify the buffer
-		return 0;
-	}
-
-	const uint32_t PRINT_PERIOD_TICKS = 1000;
-	next_print_tick = current_tick + PRINT_PERIOD_TICKS;
-
-	struct WingLoading load;
-	wing_report_strain(&load);
-
-	snprintf((char*) buffer, buff_len, "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\r\n",
-			load.strain_port[2],
-			load.strain_port[1],
-			load.strain_port[0],
-			load.strain_center,
-			load.strain_starboard[0],
-			load.strain_starboard[1],
-			load.strain_starboard[2],
-			load.torsion
-			);
-	return strnlen((char*) buffer, buff_len);
-}
 /* USER CODE END 0 */
 
 /**
@@ -208,9 +182,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//      led_operate(&led_config);
-//
-//      usb_tx_length = print_nice_loading(usb_tx_buffer, sizeof(usb_tx_buffer));
+      led_operate(&led_config);
+
+//		uint32_t current_tick = HAL_GetTick();
+//		const uint32_t PRINT_PERIOD_TICKS = 1000;
+//		static uint32_t next_print_tick = 0;
+//		if (current_tick > next_print_tick) {
+//			usb_tx_length = print_nice_loading(usb_tx_buffer, sizeof(usb_tx_buffer));
+//			next_print_tick = current_tick + PRINT_PERIOD_TICKS;
+//		}
+//		else buffer[0] = '\0'; // Nullify the buffer
+
 //      if (usb_tx_length > 0) {
 //    	  CDC_Transmit_FS(usb_tx_buffer, usb_tx_length);
 //    	  wing_setup(&hcan1);

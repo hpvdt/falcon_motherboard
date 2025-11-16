@@ -10,13 +10,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_fmpi2c.h"
-
-struct AtmoConditions {
-	float temperature_c;
-	float humidity_rel;
-	float static_pressure_pa;
-	uint16_t co2_ppm;
-};
+#include "falcon_data.h"
 
 HAL_StatusTypeDef atmo_setup(FMPI2C_HandleTypeDef* bus, uint32_t i2c_timeout_ms);
 

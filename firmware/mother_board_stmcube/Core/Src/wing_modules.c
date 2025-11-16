@@ -4,6 +4,8 @@
 #include "can_wrapper.h"
 #include <string.h>
 #include "ads131m03.h"
+#include "falcon_data.h"
+#include <stdio.h>
 
 static struct WingModuleConfig node[32];
 static struct WingLoading current_loading;
@@ -212,3 +214,5 @@ void wing_record_strain(uint16_t can_message_id, uint8_t* rx_buffer) {
 void wing_report_strain(struct WingLoading* destination) {
 	memcpy(destination, &current_loading, sizeof(struct WingLoading));
 }
+
+

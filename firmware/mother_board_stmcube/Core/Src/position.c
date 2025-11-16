@@ -10,6 +10,7 @@
 #include "position.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_fmpi2c.h"
+#include "falcon_data.h"
 
 #include "bosch_wrappers.h"
 #include "../../BNO055_SensorAPI/bno055.h"
