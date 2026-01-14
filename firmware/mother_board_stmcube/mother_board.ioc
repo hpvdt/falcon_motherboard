@@ -1,6 +1,6 @@
 #MicroXplorer Configuration settings - do not modify
-CAD.formats=
-CAD.pinconfig=
+CAD.formats=[{"id"\:42,"cad_product"\:"KiCAD v6+","cad_family"\:"KiCAD"}]
+CAD.pinconfig=Project naming
 CAD.provider=
 CAN1.BS1=CAN_BS1_7TQ
 CAN1.BS2=CAN_BS2_2TQ
@@ -258,7 +258,7 @@ ProjectManager.BackupPrevious=false
 ProjectManager.CompilerLinker=GCC
 ProjectManager.CompilerOptimize=6
 ProjectManager.ComputerToolchain=false
-ProjectManager.CoupleFile=false
+ProjectManager.CoupleFile=true
 ProjectManager.CustomerFirmwarePackage=
 ProjectManager.DefaultFWLocation=true
 ProjectManager.DeletePrevious=true
