@@ -54,10 +54,13 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(RADIO_INT_CE_GPIO_Port, RADIO_INT_CE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, RADIO_EXT_CE_Pin|RADIO_EXT_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(RADIO_EXT_CE_GPIO_Port, RADIO_EXT_CE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RADIO_INT_CS_GPIO_Port, RADIO_INT_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(RADIO_EXT_CS_GPIO_Port, RADIO_EXT_CS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RADIO_INT_CS_GPIO_Port, RADIO_INT_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : RADIO_INT_CE_Pin */
   GPIO_InitStruct.Pin = RADIO_INT_CE_Pin;

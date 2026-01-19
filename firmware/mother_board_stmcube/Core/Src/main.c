@@ -38,6 +38,7 @@
 #include "ina219.h"
 #include "atmosphere.h"
 #include "position.h"
+#include "../../stm32_hal_nrf24_library/NRF24.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +67,40 @@ TIM_HandleTypeDef* led_heartbeat_clk = &htim3;
 uint32_t led_heartbeat_chn = TIM_CHANNEL_3;
 
 const uint32_t I2C_TIMEOUT = 10; // Timeout to be used for I2C interactions
+
+struct NRFConfig radio_ext = {
+	.hspiX = &hspi1,
+	.spi_w_timeout = 1000,
+	.spi_r_timeout = 1000,
+	.spi_rw_timeout = 1000,
+
+	.csn_gpio_port = RADIO_EXT_CS_GPIO_Port,
+	.csn_gpio_pin = RADIO_EXT_CS_Pin,
+
+	.ce_gpio_port = RADIO_EXT_CE_GPIO_Port,
+	.ce_gpio_pin = RADIO_EXT_CE_Pin,
+};
+
+struct NRFConfig radio_int = {
+	.hspiX = &hspi1,
+	.spi_w_timeout = 1000,
+	.spi_r_timeout = 1000,
+	.spi_rw_timeout = 1000,
+
+	.csn_gpio_port = RADIO_INT_CS_GPIO_Port,
+	.csn_gpio_pin = RADIO_INT_CS_Pin,
+
+	.ce_gpio_port = RADIO_INT_CE_GPIO_Port,
+	.ce_gpio_pin = RADIO_INT_CE_Pin,
+};
+
+#define PLD_S 4
+
+uint8_t rx_addr[5] = {'1', 'N', 'o', 'd', 'e'};
+uint8_t tx_addr[5] = {'2', 'N', 'o', 'd', 'e'};
+
+uint8_t radio_tx_buffer[PLD_S];
+uint8_t radio_rx_buffer[PLD_S];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,6 +160,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
+  MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
 	struct LEDMoBoConfig led_config = {
@@ -147,6 +183,112 @@ int main(void)
 	ret = atmo_setup(&hfmpi2c1, I2C_TIMEOUT);
 
 	ret = pos_setup(&hfmpi2c1, I2C_TIMEOUT);
+
+	/*
+	 * SPI Frequency           = 10 Mhz
+Channel                 = 76 (~ 2476 MHz)
+Model                   = nRF24L01+
+RF Data Rate            = 1 MBPS
+RF Power Amplifier      = PA_LOW
+RF Low Noise Amplifier  = Enabled
+CRC Length              = 16 bits
+Address Length          = 5 bytes
+Static Payload Length   = 4 bytes
+Auto Retry Delay        = 1500 microseconds
+Auto Retry Attempts     = 15 maximum
+Packets lost on
+    current channel     = 0
+Retry attempts made for
+    last transmission   = 15
+Multicast               = Disabled
+Custom ACK Payload      = Disabled
+Dynamic Payloads        = Disabled
+Auto Acknowledgment     = Enabled
+Primary Mode            = TX
+TX address              = 0x65646f4e31
+pipe 0 ( open ) bound   = 0x65646f4e31
+pipe 1 ( open ) bound   = 0x65646f4e32
+	 */
+
+	struct NRFConfig* target_radio = &radio_int;
+	  csn_high(*target_radio);
+	  ce_high(*target_radio);
+
+	  HAL_Delay(5);
+
+	  ce_low(*target_radio);
+
+	  nrf24_init(*target_radio, &htim8);
+
+	  nrf24_auto_ack_all(*target_radio, auto_ack);
+	  nrf24_en_ack_pld(*target_radio, disable);
+	  nrf24_dpl(*target_radio, disable);
+
+	  nrf24_set_crc(*target_radio, en_crc, _2byte);
+
+	  nrf24_tx_pwr(*target_radio, n6dbm);
+	  nrf24_data_rate(*target_radio, _1mbps);
+	  nrf24_set_channel(*target_radio, 76);
+	  nrf24_set_addr_width(*target_radio, 5);
+
+	  nrf24_set_rx_dpl(*target_radio, 0, disable);
+	  nrf24_set_rx_dpl(*target_radio, 1, disable);
+	  nrf24_set_rx_dpl(*target_radio, 2, disable);
+	  nrf24_set_rx_dpl(*target_radio, 3, disable);
+	  nrf24_set_rx_dpl(*target_radio, 4, disable);
+	  nrf24_set_rx_dpl(*target_radio, 5, disable);
+
+	  nrf24_pipe_pld_size(*target_radio, 0, PLD_S);
+	  nrf24_pipe_pld_size(*target_radio, 1, PLD_S);
+
+	  nrf24_auto_retr_delay(*target_radio, 4); // Delay is in increments of 250us
+	  nrf24_auto_retr_limit(*target_radio, 15);
+
+	  nrf24_open_tx_pipe(*target_radio, tx_addr);
+	  nrf24_open_rx_pipe(*target_radio, 1, rx_addr);
+
+	  nrf24_listen(*target_radio);
+
+
+	  target_radio = &radio_ext;
+	  	  csn_high(*target_radio);
+	  	  ce_high(*target_radio);
+
+	  	  HAL_Delay(5);
+
+	  	  ce_low(*target_radio);
+
+	  	  nrf24_init(*target_radio, &htim8);
+
+	  	  nrf24_auto_ack_all(*target_radio, auto_ack);
+	  	  nrf24_en_ack_pld(*target_radio, disable);
+	  	  nrf24_dpl(*target_radio, disable);
+
+	  	  nrf24_set_crc(*target_radio, en_crc, _2byte);
+
+	  	  nrf24_tx_pwr(*target_radio, n6dbm);
+	  	  nrf24_data_rate(*target_radio, _1mbps);
+	  	  nrf24_set_channel(*target_radio, 76);
+	  	  nrf24_set_addr_width(*target_radio, 5);
+
+	  	  nrf24_set_rx_dpl(*target_radio, 0, disable);
+	  	  nrf24_set_rx_dpl(*target_radio, 1, disable);
+	  	  nrf24_set_rx_dpl(*target_radio, 2, disable);
+	  	  nrf24_set_rx_dpl(*target_radio, 3, disable);
+	  	  nrf24_set_rx_dpl(*target_radio, 4, disable);
+	  	  nrf24_set_rx_dpl(*target_radio, 5, disable);
+
+	  	  nrf24_pipe_pld_size(*target_radio, 0, PLD_S);
+	  	  nrf24_pipe_pld_size(*target_radio, 1, PLD_S);
+
+	  	  nrf24_auto_retr_delay(*target_radio, 4); // Delay is in increments of 250us
+	  	  nrf24_auto_retr_limit(*target_radio, 15);
+
+	  	  nrf24_open_tx_pipe(*target_radio, rx_addr);
+	  	  nrf24_open_rx_pipe(*target_radio, 0, rx_addr);
+
+	  	  nrf24_stop_listen(*target_radio);
+	  	  ce_high(radio_ext);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -163,6 +305,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+		uint32_t data_sent = HAL_GetTick();
+		nrf24_transmit(radio_ext, &data_sent, 4);
+
+		if(nrf24_data_available(radio_int)){
+			uint32_t data_received = 0;
+			nrf24_receive(radio_int, radio_rx_buffer, sizeof(radio_rx_buffer));
+			data_received = nrf24_uint8_t_to_type(radio_rx_buffer, sizeof(data_received));
+			printf("TX: %ld\tRX: %ld\r\n", data_sent, data_received);
+		}
+		else printf("TX: %ld\r\n", data_sent);
+
       led_operate(&led_config);
 
 //		uint32_t current_tick = HAL_GetTick();
@@ -180,13 +334,13 @@ int main(void)
 //      }
       HAL_Delay(1000);
 
-      struct AtmoConditions atmo_cond = {0};
-      ret = atmo_conditions_update(&atmo_cond);
-      printf("[%d]T: %.2f\tH: %.2f\tP: %.2f\tCO2: %d\n\r", ret, atmo_cond.temperature_c,
-    		  atmo_cond.humidity_rel, atmo_cond.static_pressure_pa, atmo_cond.co2_ppm);
-      struct OrientationState orientation = {0};
-      ret = pos_orientation_update(&orientation);
-      printf("[%d]R: %6.1f\tP: %6.1f\tY: %6.1f\n\r", ret, orientation.roll_deg, orientation.pitch_deg, orientation.yaw_deg);
+//      struct AtmoConditions atmo_cond = {0};
+//      ret = atmo_conditions_update(&atmo_cond);
+//      printf("[%d]T: %.2f\tH: %.2f\tP: %.2f\tCO2: %d\n\r", ret, atmo_cond.temperature_c,
+//    		  atmo_cond.humidity_rel, atmo_cond.static_pressure_pa, atmo_cond.co2_ppm);
+//      struct OrientationState orientation = {0};
+//      ret = pos_orientation_update(&orientation);
+//      printf("[%d]R: %6.1f\tP: %6.1f\tY: %6.1f\n\r", ret, orientation.roll_deg, orientation.pitch_deg, orientation.yaw_deg);
   }
   /* USER CODE END 3 */
 }
