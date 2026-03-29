@@ -94,19 +94,19 @@ size_t pack_strain_message(struct WingLoading* data, uint8_t* buffer) {
 size_t pack_main_message(struct CompleteAircraftData* data, uint8_t* buffer) {
     uint8_t location = 0;
 
-    location = append_float(data->orientation.roll_deg, buffer, location);
-    location = append_float(data->orientation.pitch_deg, buffer, location);
-    location = append_float(data->orientation.yaw_deg, buffer, location);
+    location = append_float(data->orientation.roll_deg		, buffer, location);
+    location = append_float(data->orientation.pitch_deg		, buffer, location);
+    location = append_float(data->orientation.yaw_deg		, buffer, location);
 
-    location = append_float(data->power.shaft_w, buffer, location);
-    location = append_float(data->power.propellor_w, buffer, location);
+    location = append_float(data->power.shaft_w				, buffer, location);
+    location = append_float(data->power.propellor_torque_nm	, buffer, location);
 
-    location = append_float(data->atmo.temperature_c, buffer, location);
-    location = append_float(data->atmo.static_pressure_pa, buffer, location);
+    location = append_float(data->atmo.temperature_c		, buffer, location);
+    location = append_float(data->atmo.static_pressure_pa	, buffer, location);
 
-    location = append_float(data->atmo.wind.x_m_s, buffer, location);
-    location = append_float(data->atmo.wind.y_m_s, buffer, location);
-    location = append_float(data->atmo.wind.z_m_s, buffer, location);
+    location = append_float(data->atmo.wind.x_m_s			, buffer, location);
+    location = append_float(data->atmo.wind.y_m_s			, buffer, location);
+    location = append_float(data->atmo.wind.z_m_s			, buffer, location);
 
     location = append_checksum(buffer, location);
 
@@ -116,12 +116,12 @@ size_t pack_main_message(struct CompleteAircraftData* data, uint8_t* buffer) {
 size_t pack_gps_message(struct GPSState* data, uint8_t* buffer) {
     uint8_t location = 0;
 
-    location = append_type(MESSAGE_TYPE_GPS, buffer, location);
+    location = append_type(MESSAGE_TYPE_GPS		, buffer, location);
 
-    location = append_float(data->altitude_m, buffer, location);
-    location = append_float(data->speed_m_s, buffer, location);
-    location = append_float(data->latitude_deg, buffer, location);
-    location = append_float(data->longitude_deg, buffer, location);
+    location = append_float(data->altitude_m	, buffer, location);
+    location = append_float(data->speed_m_s		, buffer, location);
+    location = append_float(data->latitude_deg	, buffer, location);
+    location = append_float(data->longitude_deg	, buffer, location);
 
     location = append_checksum(buffer, location);
 

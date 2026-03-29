@@ -55,8 +55,11 @@ struct CompleteAircraftData {
 	struct WingLoading wing_load;
 
     struct {
+		float shaft_torque_nm;
+		float shaft_rpm;
         float shaft_w;
-        float propellor_w;
+
+        float propellor_torque_nm;
     } power;
 
     struct GPSState gps;
