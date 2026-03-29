@@ -41,6 +41,14 @@ struct WingLoading {
 	float torsion;
 };
 
+struct PilotInput {
+	float pitch;
+	float roll;
+	float yaw;
+
+	float propellor_pitch_angle_rad;
+};
+
 struct CompleteAircraftData {
 	struct OrientationState orientation;
 	struct AtmoConditions atmo;
@@ -52,6 +60,7 @@ struct CompleteAircraftData {
     } power;
 
     struct GPSState gps;
+    struct PilotInput pilot;
 };
 
 #endif /* INC_FALCON_DATA_H_ */

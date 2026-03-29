@@ -555,7 +555,6 @@ void nrf24_stop_const_carrier(){
 void nrf24_defaults(struct NRFConfig radio){
 	ce_low(radio);
 
-	nrf24_pwr_dwn(radio);
 	nrf24_tx_pwr(radio, n6dbm);
 	nrf24_data_rate(radio, _1mbps);
 	nrf24_set_channel(radio, 76);
@@ -570,7 +569,7 @@ void nrf24_defaults(struct NRFConfig radio){
 	nrf24_dpl(radio, disable);
 	nrf24_en_ack_pld(radio, disable);
 	nrf24_en_dyn_ack(radio, disable);
-	nrf24_auto_retr_delay(radio, 1); // Delay is in increments of 250us
+	nrf24_auto_retr_delay(radio, 4); // Delay is in increments of 250us
 	nrf24_auto_retr_limit(radio, 15);
 
 	for(uint8_t i = 0; i < 5; i++){
@@ -579,8 +578,6 @@ void nrf24_defaults(struct NRFConfig radio){
 		nrf24_set_rx_dpl(radio, i, disable);
 		nrf24_auto_ack(radio, i, enable);
 	}
-
-	ce_high(radio);
 }
 
 void nrf24_init(struct NRFConfig radio, TIM_HandleTypeDef* us_timer){
@@ -591,6 +588,13 @@ void nrf24_init(struct NRFConfig radio, TIM_HandleTypeDef* us_timer){
 			Error_Handler();
 		}
 	}
+
+	csn_high(radio);
+	ce_high(radio);
+
+	HAL_Delay(5);
+
+	ce_low(radio);
 
 	nrf24_pwr_up(radio);
 
@@ -605,10 +609,6 @@ void nrf24_init(struct NRFConfig radio, TIM_HandleTypeDef* us_timer){
 		Error_Handler();
 	}
 
-	nrf24_flush_tx(radio);
-	nrf24_flush_rx(radio);
-	nrf24_clear_rx_dr(radio);
-	nrf24_clear_tx_ds(radio);
-	nrf24_clear_max_rt(radio);
+	nrf24_defaults(radio);
 }
 
